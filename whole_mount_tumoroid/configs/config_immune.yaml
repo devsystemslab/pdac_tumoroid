@@ -1,0 +1,41 @@
+screen: immune
+dir_output: data/processed
+metadata: metafiles/imaging_data_overview.csv
+plate_layout: metafiles/plate_layout_dummy.csv
+remove_first_tile: true
+overlap: 0.1
+overwrite_existing: false
+clean_up: false
+wells:
+preprocessing:
+  run: true
+  illuminaton_correction: true
+  chunk_size: 150
+  max_iter: 250
+  remove_first_tile: true
+background_correction:
+  run: true
+  mode: basicpy
+mip:
+  run: true
+  input:
+    - TIF_OVR
+    - TIF_OVR_BG
+montage:
+  run: true
+  input:
+    - TIF_MIP_OVR
+    - TIF_MIP_OVR_BG
+segmentation:
+  run: true
+  restore_dapi: false
+  input:
+    - TIF_OVR_BG
+feature_extraction:
+  run: true
+  input:
+    - TIF_OVR
+    - TIF_OVR_BG
+  segmentation_input: SEG_TIF_OVR_BG
+registration:
+  run: false

@@ -1,0 +1,73 @@
+screen: timecourse
+dir_output: data/processed
+metadata: metafiles/imaging_data_overview.csv
+plate_layout: metafiles/plate_layout_dummy.csv
+remove_first_tile: true
+overlap: 0.1
+overwrite_existing: false
+clean_up: false
+wells:
+  - [A01, B01, C01, D01, E01, F01, G01, H01]
+  - [A02, B02, C02, D02, E02, F02, G02, H02]
+  - [A03, B03, C03, D03, E03, F03, G03, H03]
+  - [A04, B04, C04, D04, E04, F04, G04, H04]
+  - [A05, B05, C05, D05, E05, F05, G05, H05]
+  - [A06, B06, C06, D06, E06, F06, G06, H06]
+  - [I01, J01, K01, L01, M01, N01, O01, P01]
+  - [I02, J02, K02, L02, M02, N02, O02, P02]
+  - [I03, J03, K03, L03, M03, N03, O03, P03]
+  - [I04, J04, K04, L04, M04, N04, O04, P04]
+  - [I05, J05, K05, L05, M05, N05, O05, P05]
+  - [I06, J06, K06, L06, M06, N06, O06, P06]
+preprocessing:
+  run: true
+  illuminaton_correction: true
+  chunk_size: 100
+  max_iter: 250
+  remove_first_tile: true
+background_correction:
+  run: true
+  mode: basicpy
+  multiplicative:
+    001-01:
+      - "04"
+    002-01:
+      - "04"
+    003-01:
+      - "04"
+    004-01:
+      - "04"
+    005-01:
+      - "04"
+  median_filter:
+    001-01:
+      - "04"
+    002-01:
+      - "04"
+    003-01:
+      - "04"
+    004-01:
+      - "04"
+    005-01:
+      - "04"
+
+mip:
+  run: true
+  input:
+    - TIF_OVR
+    - TIF_OVR_BG
+montage:
+  run: true
+  input:
+    - TIF_MIP_OVR
+    - TIF_MIP_OVR_BG
+segmentation:
+  run: true
+  input:
+    - TIF_OVR_BG
+feature_extraction:
+  run: true
+  input:
+    - TIF_OVR
+    - TIF_OVR_BG
+  segmentation_input: SEG_TIF_OVR_BG
