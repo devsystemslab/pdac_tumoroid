@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 
 def setup_dask_slurm_client(
-    task_name: str = "dask-worker",
+    job_name: str = "dask-worker",
     n_workers: int = 4,
     cores_per_worker: int = 4,
     memory_per_worker: str = "16GB",
@@ -79,7 +79,7 @@ def get_metadata(dir_images: str) -> pd.DataFrame:
 
 
 def scale_image(
-    image: np.ndarray, percentile: int = 1, range: tuple[int] = (0, 65535)
+    image: np.ndarray, percentile: int = 1, range: tuple = (0, 65535)
 ) -> np.ndarray:
     """
     Scale image
@@ -289,4 +289,7 @@ def load_plate(
     df.index = (
         df["label"].astype(str) + "_" + df["well"] + "_" + df["plate"].astype(str)
     )
+    # index to unique string labels
+    df.reset_index(drop=False, inplace=True)
+    df.index = df['label'].astype(str) + '_' + df['well'] + '_' + df['plate'].astype(str)
     return df
