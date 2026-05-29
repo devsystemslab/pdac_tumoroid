@@ -1,14 +1,13 @@
-import sys
-sys.path.append('/pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen')
-
 import yaml
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 import muon as mu
 import numpy as np
 import tqdm
 import pickle
 import matplotlib.pyplot as plt
+
 from scipy.stats import pearsonr, spearmanr
 from sklearn.metrics import r2_score, mean_absolute_error
 
