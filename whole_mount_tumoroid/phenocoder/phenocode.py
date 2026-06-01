@@ -269,6 +269,3 @@ def encode_grid_patches(well, plate, dir_screen, cycle, dir_model,
     adata.obs = df[['x', 'y', 'z']].assign(well_id=well, plate_id=plate)
 
     return adata
-
-
-

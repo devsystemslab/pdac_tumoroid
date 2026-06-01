@@ -127,6 +127,7 @@ class DatasetGenerator:
                 if os.path.exists(file):
                     df = pd.read_csv(file).assign(id=i)
                     self.patch_positions.append(df)
+            dfs = [df for df in self.patch_positions if not df.empty]
             self.patch_positions = pd.concat(
                 [df for df in self.patch_positions if not df.empty]
             )
@@ -265,6 +266,13 @@ class DatasetGenerator:
                 [self.load_image(file) for file in df_batch_images["file"]]
             )
             imgs = np.moveaxis(imgs, 0, -1)
+            expected_channels = len(self.channels)
+            if imgs.shape[-1] != expected_channels:
+                print(
+                    f"WARNING: Skipping sample_id {sample_id} - expected {expected_channels} channels but got {imgs.shape[-1]}"
+                )
+                print(f"  Image shape: {imgs.shape}")
+                return  # Skip this sample
             df_stat = self.__get_image_stats__(imgs, sample_id, "id")
             self.df_stats = pd.concat([self.df_stats, df_stat])
             patches = [
@@ -960,17 +968,17 @@ def extract_conditions(files, dir_datasets):
 
     return conditions_dataset, conditions_z
 
-
-def setup_generators(
-    dir_datasets,
-    conditional=False,
-    batch_size=64,
-    dim=(128, 128),
-    n_channels=4,
-    shuffle=True,
-    scale=True,
-    n_workers=1,
-):
+def setup_generators(dir_datasets,
+                     conditional=False,
+                     ignore_dataset_condition=False,
+                     batch_size=64,
+                     dim=(128, 128),
+                     n_channels=4,
+                     shuffle=True,
+                     df_frac=1,
+                     scale=True,
+                     n_workers=1,
+                     plates=None):
     """
     Setup generators
     :param dir_datasets:
@@ -984,11 +992,10 @@ def setup_generators(
     :return:
     """
     datasets = os.listdir(dir_datasets)
-    datasets = [
-        d
-        for d in datasets
-        if os.path.isfile(os.path.join(dir_datasets, d, "stats.csv"))
-    ]
+    datasets = [d for d in datasets if os.path.isfile(os.path.join(dir_datasets, d, 'stats.csv'))]
+    if plates is not None:
+        datasets = [d for d in datasets if any(plate in d for plate in plates)]
+    print("Training on datasets:", datasets)
     dataset_merger = DatasetMerger(datasets=datasets, dir_datasets=dir_datasets)
     dataset_merger.merge_datasets()
     files = dataset_merger.get_files()
@@ -996,7 +1003,7 @@ def setup_generators(
     conditions_dataset, conditions_z = extract_conditions(files, dir_datasets)
     df = pd.DataFrame({"file": files, "dataset": conditions_dataset, "z": conditions_z})
     # randomize
-    df = df.sample(frac=1, random_state=42, replace=False)
+    df = df.sample(frac=df_frac, replace=False)
     # get well dataset combinations and split into train and val
     df["well_id"] = df["file"].apply(lambda x: x.split("/")[-1].split("_")[0])
     df_well = df.groupby(["well_id", "dataset"]).count()
@@ -1023,7 +1030,10 @@ def setup_generators(
     files_val = df[df["split"] == "val"]["file"]
     # one hot encode conditions with sklearn
     enc = OneHotEncoder()
-    cond = enc.fit_transform(df[["dataset", "z"]]).toarray()
+    if ignore_dataset_condition:
+        cond = enc.fit_transform(df[['z']]).toarray()
+    else:
+        cond = enc.fit_transform(df[['dataset', 'z']]).toarray()
     # convert conditions to numpy array
     cond_train = cond[df["split"] == "train"]
     cond_val = cond[df["split"] == "val"]

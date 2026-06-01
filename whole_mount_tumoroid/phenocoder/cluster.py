@@ -46,7 +46,9 @@ def project_clustering(adata: ad.AnnData,
                        adata_ref: ad.AnnData,
                        chunk_size: int = 50000,
                        k: int = 25,
-                       epsilon: float = 0.2):
+                       epsilon: float = 0.2,
+                       ref_cluster_key='leiden',
+                       cluster_key_added='leiden'):
     # TODO: make more flexible -> not just for X_pca, also for X and other layers...
     #       generalize cluster key
     """
@@ -59,17 +61,17 @@ def project_clustering(adata: ad.AnnData,
     """
     index = build_search_tree(adata_ref.obsm['X_pca'])
 
-    y_pred = np.asarray(adata_ref.obs['leiden'].values.astype(int))
+    y_pred = np.asarray(adata_ref.obs[ref_cluster_key].values.astype(int))
     labels = []
     print()
     for i in tqdm(range(0, adata.obsm['X_pca'].shape[0], chunk_size), desc='Projecting clusters'):
         neighbors = index.query(adata.obsm['X_pca'][i:i + chunk_size], k=k, epsilon=epsilon)[0]
         labels.append(np.asarray([majority_voting(x, y_pred) for x in neighbors]))
-    adata.obs['leiden'] = np.concatenate(labels)
+    adata.obs[cluster_key_added] = np.concatenate(labels)
     return adata
 
 
-def get_accuracy(adata: ad.AnnData, adata_sampled: ad.AnnData) -> float:
+def get_accuracy(adata: ad.AnnData, adata_sampled: ad.AnnData, ref_cluster_key='leiden', cluster_key_added='leiden') -> float:
     """
     Get accuracy
     :param adata:
@@ -77,13 +79,13 @@ def get_accuracy(adata: ad.AnnData, adata_sampled: ad.AnnData) -> float:
     :return:
     """
     n_sampled = adata_sampled.shape[0]
-    pred_true = adata.obs.loc[adata_sampled.obs.index]['leiden'] == adata_sampled.obs['leiden'].astype(int)
+    pred_true = adata.obs.loc[adata_sampled.obs.index][cluster_key_added] == adata_sampled.obs[ref_cluster_key].astype(int)
     return np.sum(pred_true) / n_sampled
 
 
 def clustering(adata: ad.AnnData, dry_run: bool = False, resolution: float = 0.3,
                run_pca: bool = True, run_harmony: bool = False,
-               n_comps=6, use_gpu=True, reset_gpu=False, layer=None, var_subset=None) -> ad.AnnData:
+               n_comps=6, use_gpu=True, reset_gpu=False, layer=None, var_subset=None, cluster_key_added='leiden') -> ad.AnnData:
     # TODO: make more flexible. -> no pca if phenocoder is feature set and no harmony if not
     #       handle use_rep accordingly
     """
@@ -134,9 +136,9 @@ def clustering(adata: ad.AnnData, dry_run: bool = False, resolution: float = 0.3
         rsc.get.anndata_to_CPU(adata)
     else:
         if run_pca:
-            print('Running PCA...')
+            print("Running PCA...")
             if adata.X.shape[1] == 1:
-                adata.obsm['X_pca'] = adata.X.copy()
+                adata.obsm["X_pca"] = adata.X.copy()
             else:
                 if n_comps >= adata.X.shape[1]:
                     n_comps = adata.X.shape[1] - 1
@@ -153,7 +155,7 @@ def clustering(adata: ad.AnnData, dry_run: bool = False, resolution: float = 0.3
             print('Running UMAP...')
             sc.tl.umap(adata, n_components=2)
             print('Running leiden clustering...')
-            sc.tl.leiden(adata, resolution=resolution)
+            sc.tl.leiden(adata, resolution=resolution, key_added=cluster_key_added)
 
     return adata
 

@@ -102,13 +102,16 @@ def train_model(dir_dataset,
                 n_dense_dim,
                 n_epochs,
                 conditional,
+                ignore_dataset_condition,
                 dropout=0.25,
                 batch_size=64,
                 n_workers=1,
                 input_shape=(128,128,4),
                 conv_layers=(8,16,32,64,128),
                 beta=1,
-                plot_frac=0.1):
+                plot_frac=0.1,
+                df_frac=1,
+                plates=None):
     """
     Train CVAE model
     :param dir_dataset:
@@ -116,6 +119,7 @@ def train_model(dir_dataset,
     :param n_dense_dim:
     :param n_epochs:
     :param conditional:
+    :param ignore_dataset_condition:
     :param dropout:
     :param batch_size:
     :param n_workers:
@@ -139,12 +143,15 @@ def train_model(dir_dataset,
     # set up data generators
     generator_train, generator_val, df_cond, oh_enc = setup_generators(dir_dataset,
                                                                        conditional,
+                                                                       ignore_dataset_condition,
                                                                        batch_size=batch_size,
                                                                        n_workers=n_workers,
                                                                        dim=dim,
                                                                        n_channels=n_channels,
-                                                                       shuffle=True)
-
+                                                                       shuffle=True,
+                                                                       df_frac=df_frac,
+                                                                       plates=plates)
+    
     # write all parameters to yaml
     param_dict = {'n_latent_dim': n_latent_dim,
                   'n_dense_dim': n_dense_dim,
@@ -190,6 +197,9 @@ def train_model(dir_dataset,
         os.makedirs(dir_tensorboard)
     print('Tensorflow devices')
     print(tf.config.list_physical_devices())
+    gpus = tf.config.list_physical_devices('GPU')
+    tf.config.set_visible_devices(gpus[0], 'GPU')
+    print(f"Using GPU: {gpus}")
     # model summary
     print('Model summary:')
     for key, value in param_dict.items():
@@ -239,6 +249,9 @@ if __name__ == "__main__":
     parser.add_argument('--n_workers', type=int, default=1)
     parser.add_argument('--beta', type=float, default=1)
     parser.add_argument('--plot_frac', type=float, default=0.1)
+    parser.add_argument('--df_frac', type=float, default=1)
+    parser.add_argument('--ignore_dataset_condition', action='store_true', default=False)
+    parser.add_argument('--plates', type=str, nargs='*', default=None, help='List of plates to include in training (default: all plates)')
     args = parser.parse_args()
 
     input_shape = tuple(args.input_shape)
@@ -253,4 +266,7 @@ if __name__ == "__main__":
                 batch_size=args.batch_size,
                 n_workers=args.n_workers,
                 beta=args.beta,
-                plot_frac=args.plot_frac)
+                plot_frac=args.plot_frac,
+                df_frac=args.df_frac,
+                ignore_dataset_condition=args.ignore_dataset_condition,
+                plates=args.plates)

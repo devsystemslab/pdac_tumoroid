@@ -12,6 +12,7 @@ from dask.distributed import as_completed
 from scipy.spatial import ConvexHull
 from sklearn.neighbors import radius_neighbors_graph
 from tqdm import tqdm
+import pickle
 
 from whole_mount_tumoroid.phenocoder.utils import setup_dask_slurm_client
 
@@ -171,19 +172,6 @@ def get_chulls_connected_components(
     # filter n_pts for min_nds
     df_results = df_results[df_results["n_pts"] >= min_nds]
 
-    # check plot
-    # for i, component in enumerate(list(nx.connected_components(G))):
-    #     if len(component) < min_nds:
-    #         for node in component:
-    #             G.remove_node(node)
-    # A = nx.adjacency_matrix(G, weight=None)
-    # conn_comps = connected_components(A)
-    # # plot graph and label colors with connected components
-    # fig = plt.figure(figsize=(10, 10))
-    # # use pts as coordinate layout
-    # pos = {i: pts[i,1:] for i in range(len(pts))}
-    # nx.draw(G, pos=pos, node_size=10, node_color=conn_comps[1], cmap='tab20',edge_color='k', alpha=0.5, arrows=False)
-    # plt.show()
     return df_results
 
 
@@ -390,10 +378,11 @@ def get_spatial_stats(
     well: str,
     plate: str,
     adata: ad.AnnData,
-    radii: tuple[int] = (25, 50, 100, 150),
+    radii: tuple = (25, 50, 100, 150),
     radius_chull: int = 100,
     layer: str = None,
     cluster_key: str = None,
+    dropout: float = None,
 ) -> pd.DataFrame:
     """
     Get spatial stats
@@ -408,6 +397,13 @@ def get_spatial_stats(
     """
     adata = adata[adata.obs["well_id"] == well]
     adata = adata[adata.obs["plate_id"] == plate]
+    if dropout is not None:
+        # sample cells for dropout
+        adata = adata[
+            np.random.choice(
+                adata.obs.index, int(len(adata) * (1 - dropout)), replace=False
+            )
+        ]
     adata = adata.copy()
     if layer is not None:
         adata.X = adata.layers[layer].copy()
@@ -451,8 +447,9 @@ def get_spatial_stats(
 
 def run_spatial_feature_processing(
     mdata,
-    radii: tuple[int] = (25, 50, 100, 150),
+    radii: tuple = (25, 50, 100, 150),
     radius_chull: int = 100,
+    dropout: float = None,
     use_dask: bool = False,
 ):
     """
@@ -462,13 +459,23 @@ def run_spatial_feature_processing(
     :param radius_chull:
     :return:
     """
+    if dropout is not None:
+        indices_keep = []
+        for (plate_id, well_id), group in (
+            mdata.mod[list(mdata.mod.keys())[0]]
+            .obs.groupby(["plate_id", "well_id"])
+            .groups.items()
+        ):
+            n_keep = int(len(group) * (1 - dropout))
+            indices_keep.extend(np.random.choice(group, size=n_keep, replace=False))
+        mdata = mdata[sorted(indices_keep)]
 
     if use_dask:
         client, cluster = setup_dask_slurm_client()
 
     spatial_dict = {}
     df_qc = []
-    for mod in mdata.mod_names:
+    for mod in mdata.mod.keys():
         n_cluster = len(mdata[mod].obs["leiden"].unique())
         assert n_cluster > 1
         df_tmp = (
@@ -490,7 +497,7 @@ def run_spatial_feature_processing(
 
     df_qc = pd.concat(df_qc, axis=1).all(axis=1).reset_index(name="selected")
 
-    for mod in mdata.mod_names:
+    for mod in mdata.mod.keys():
         df = (
             mdata[mod]
             .obs.groupby(["well_id", "plate_id"], observed=False)
@@ -515,18 +522,16 @@ def run_spatial_feature_processing(
                 futures.append(future)
             df_stats = pd.concat(client.gather(futures)).fillna(0)
         else:
-            print(mdata[mod].obs.index)
-            print(df)
-            df_stats = pd.concat(
-                [
-                    get_spatial_stats(well, plate, mdata[mod], radii, radius_chull)
-                    for well, plate in tqdm(
-                        zip(df["well_id"], df["plate_id"]),
-                        desc=f"Spatial statistics - {mod}",
-                        total=df.shape[0],
-                    )
-                ]
-            ).fillna(0)
+            results = []
+            for well, plate in tqdm(zip(df['well_id'], df['plate_id']),
+                                    desc=f'Spatial statistics - {mod}',
+                                    total=df.shape[0]):
+                r = get_spatial_stats(well, plate, mdata[mod], radii, radius_chull)
+                results.append(r)
+            #with open(f'{mod}_intermediate_results.pkl', 'wb') as f:
+            #    pickle.dump(results, f)
+            results_deduplicated = [df.loc[:, ~df.columns.duplicated()] for df in results]
+            df_stats = pd.concat(results_deduplicated).fillna(0)
 
         df_stats.columns = [f"{mod}_stat_" + col for col in df_stats.columns]
         # add prefix to leiden
