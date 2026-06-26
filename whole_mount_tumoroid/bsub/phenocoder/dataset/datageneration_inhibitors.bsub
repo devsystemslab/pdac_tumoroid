@@ -1,0 +1,26 @@
+#!/bin/bash
+#BSUB -J phenocoder-datagen      # Job name
+#BSUB -n 32           # number of tasks
+#BSUB -R "span[hosts=1]"  # all jobs in one host
+#BSUB -q long         # Select queue
+#BSUB -W 144:00         # Wall-clock time (hrs:mins)
+#BSUB -o phenocoder-data-%J_%I.out   # Output files
+#BSUB -e phenocoder-data-%J_%I.err   # Error files
+#BSUB -R "rusage[mem=100GB/host]"
+
+#DIR_INPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/004/004-01/TIF_OVR_BG
+#DIR_OUTPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/phenocoder/1st_cycle/004-01
+#python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 32
+#
+#DIR_INPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/005/005-01/TIF_OVR_BG
+#DIR_OUTPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/phenocoder/1st_cycle/005-01
+#python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 32
+
+DIR_INPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/004/004-03/TIF_OVR_BG
+DIR_OUTPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/phenocoder/2nd_cycle/004-03
+python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 32
+
+#DIR_INPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/005/005-03/TIF_OVR_BG
+#DIR_OUTPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/phenocoder/2nd_cycle/005-03
+#python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 32
+
