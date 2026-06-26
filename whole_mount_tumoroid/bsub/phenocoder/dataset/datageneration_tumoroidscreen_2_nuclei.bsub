@@ -1,0 +1,30 @@
+#!/bin/bash
+#BSUB -J phenocoder-datagen      # Job name
+#BSUB -n 12          # number of tasks
+#BSUB -R "span[hosts=1]"  # all jobs in one host
+#BSUB -q long         # Select queue
+#BSUB -W 360:00         # Wall-clock time (hrs:mins)
+#BSUB -o logs/datageneration_tumoroidscreen_2_nuclei-%J_%I.out   # Output files
+#BSUB -e logs/datageneration_tumoroidscreen_2_nuclei-%J_%I.err   # Error files
+#BSUB -R "rusage[mem=100GB/host]"
+
+PLATES=$(awk -F',' '$1 == "tumoroidscreen_2" {print $2}' /pstore/home/harmelc/tumoroid/whole_mount_tumoroid/metafiles/imaging_data_overview.csv)
+PLATES=$(echo $PLATES | tr ' ' '\n' | sort -u | tr '\n' ' ')
+DIR_SCREEN=/pstore/data/ihb-tumoroidscreen/data/processed/tumoroidscreen_2
+PYTHON_SCRIPT=/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/phenocoder/dataset.py
+for PLATE in $PLATES
+do
+    echo "Processing plate $PLATE - 2nd cycle"
+    DIR_INPUT=$DIR_SCREEN/$PLATE/$PLATE-03/TIF_OVR_BG
+    DIR_SEGMENTED=$DIR_SCREEN/$PLATE/$PLATE-03/features/nuclei/TIF_OVR_BG
+    DIR_OUTPUT=$DIR_SCREEN/phenocoder/2nd_cycle_nuclei/$PLATE-03
+    python $PYTHON_SCRIPT $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 500000
+done
+#for PLATE in HM006 HM010
+#do
+#    echo "Processing plate $PLATE - 2nd cycle"
+#    DIR_INPUT=$DIR_SCREEN/$PLATE/$PLATE-03/TIF_OVR_BG
+#    DIR_SEGMENTED=$DIR_SCREEN/$PLATE/$PLATE-03/features/nuclei/TIF_OVR_BG
+#    DIR_OUTPUT=$DIR_SCREEN/phenocoder/2nd_cycle_nuclei/$PLATE-03
+#    python $PYTHON_SCRIPT $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 500000
+#done

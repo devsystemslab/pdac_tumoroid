@@ -1,0 +1,18 @@
+#!/bin/bash
+#BSUB -J phenocoder-datagen      # Job name
+#BSUB -n 12           # number of tasks
+#BSUB -R "span[hosts=1]"  # all jobs in one host
+#BSUB -q long         # Select queue
+#BSUB -W 360:00         # Wall-clock time (hrs:mins)
+#BSUB -o phenocoder-data-%J_%I.out   # Output files
+#BSUB -e phenocoder-data-%J_%I.err   # Error files
+#BSUB -R "rusage[mem=100GB/host]"
+
+DIR_INPUT=/pstore/data/ihb-tumoroid/data/processed/immune/010/010-01/TIF_OVR_BG
+DIR_SEGMENTED=/pstore/data/ihb-tumoroid/data/processed/immune/010/010-01/features/nuclei/TIF_OVR_BG
+DIR_OUTPUT=/pstore/data/ihb-tumoroid/data/processed/immune/phenocoder/1st_cycle_nuclei/010-01
+echo "DIR_INPUT: $DIR_INPUT"
+echo "DIR_OUTPUT: $DIR_OUTPUT"
+echo "DIR_SEGMENTED: $DIR_SEGMENTED"
+python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 500000
+

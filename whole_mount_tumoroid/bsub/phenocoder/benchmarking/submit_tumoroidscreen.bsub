@@ -1,0 +1,13 @@
+#!/bin/bash
+#BSUB -J benchmark_tumoroidscreen[1-32]      # Job name
+#BSUB -n 1            # number of tasks
+#BSUB -q long         # Select queue
+#BSUB -W 24:00         # Wall-clock time (hrs:mins)
+#BSUB -o logs/benchmark_tumoroidscreen-%J-%I.out                   # Output file
+#BSUB -e logs/benchmark_tumoroidscreen-%J-%I.err
+#BSUB -R "rusage[mem=100GB/host]"
+
+BATCHES=$(seq 0 31)
+PARAMS=$(echo $BATCHES | cut -d' ' -f${LSB_JOBINDEX})
+SCRIPT=/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/analysis/tumoroidscreen/run_benchmark.py
+python $SCRIPT --batch $PARAMS --batch_size=48

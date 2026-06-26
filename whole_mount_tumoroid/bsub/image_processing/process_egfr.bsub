@@ -1,0 +1,20 @@
+#!/bin/bash
+#BSUB -J dask_scheduler       # Job name
+#BSUB -n 1             # number of tasks
+#BSUB -q long         # Select queue
+#BSUB -W 72:00         # Wall-clock time (hrs:mins)
+#BSUB -R "rusage[mem=64GB/host]"
+#BSUB -o egfr-%J.out # Output file
+#BSUB -e egfr-%J.err # Error file
+
+METADATA=whole_mount_tumoroid/metafiles/imaging_data_overview.csv
+CONFIG=whole_mount_tumoroid/configs/config_egfr.yaml
+
+PLATES=$(awk -F',' '$1 == "egfr" {print $2}' $METADATA)
+PLATES=$(echo $PLATES | tr ' ' '\n' | sort -u | tr '\n' ' ')
+
+for PLATE in $PLATES
+do
+    echo "Processing plate $PLATE"
+    python whole_mount_tumoroid/image_processing/cli.py $PLATE --config $CONFIG
+done
