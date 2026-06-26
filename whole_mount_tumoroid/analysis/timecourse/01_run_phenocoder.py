@@ -11,8 +11,8 @@ from whole_mount_tumoroid.phenocoder.embedding import run_organoid_embedding
 from whole_mount_tumoroid.phenocoder.features import run_feature_processing
 from whole_mount_tumoroid.phenocoder.spatial import run_spatial_feature_processing
 
-from whole_mount_tumoroid.analysis.timecourse.run_mlp_training import train_mlp
-from whole_mount_tumoroid.analysis.timecourse.run_mlp_imputation import mlp_impute
+from whole_mount_tumoroid.analysis.timecourse.mlp_training import train_mlp
+from whole_mount_tumoroid.analysis.timecourse.mlp_imputation import mlp_impute
 
 if __name__ == "__main__":
     screen = "timecourse"
@@ -23,7 +23,7 @@ if __name__ == "__main__":
         params = params[screen]
 
     print(params)
-
+    # TODO: clean paths
     stain_metadata = pd.read_csv('/pstore/data/ihb-g-deco/USERS/schulzp9/tumoroid/metafiles/timecourse_stainings_metadata.csv')
     stain_metadata['staining_set'] = stain_metadata['staining_set'].astype(str)
     stains = stain_metadata.stain.unique()
