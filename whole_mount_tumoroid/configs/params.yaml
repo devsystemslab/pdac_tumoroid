@@ -157,3 +157,51 @@ timecourse:
       org_embedding: 0.5
       imputed_neighbors_bytimepoints_False: 0.7
       imputed_nuclei_bytimepoints_False: 0.7
+
+inhibitors_noplatecondition:
+    dir_screen: "/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors"
+    registered: true
+    plates: ["004", "005"]
+    input_type: TIF_OVR_BG
+    qc:
+        run: true
+        qc_distance_threshold: 100
+        qc_score_threshold: 3
+    markers:
+        source_ch_01_neighbors: "DAPI-1"
+        source_ch_02_neighbors: "SDC1"
+        source_ch_03_neighbors: "ITGA2"
+        source_ch_04_neighbors: "LAMC2"
+        target_ch_01_neighbors: "DAPI-2"
+        target_ch_02_neighbors: "COL1"
+        target_ch_03_neighbors: "KI67"
+        target_ch_04_neighbors: "CK19"
+        source_ch_01_nuclei: "DAPI-1"
+        source_ch_02_nuclei: "SDC1"
+        source_ch_03_nuclei: "ITGA2"
+        source_ch_04_nuclei: "LAMC2"
+        target_ch_01_nuclei: "DAPI-2"
+        target_ch_02_nuclei: "COL1"
+        target_ch_03_nuclei: "KI67"
+        target_ch_04_nuclei: "CK19"
+    phenocoder:
+        dir_models: "/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/phenocoder"
+        models:
+            source:
+                cycle: "01"
+                file: "1st_cycle_nuclei/models/cond_latent_32_dense_64_dropout_0.25_beta_0.01_20260317-135744"
+            target:
+                cycle: "03"
+                file: "2nd_cycle_nuclei/models/cond_latent_32_dense_64_dropout_0.25_beta_0.01_20260317-185029"
+        n_comps_pca:
+            nuclei: 6
+            nuclei_msg: 4
+            phenocoder: 32
+            phenocoder_msg: 32
+            org_embedding: 32
+        cluster_res:
+            nuclei: 0.2
+            nuclei_msg: 0.2
+            phenocoder: 0.5
+            phenocoder_msg: 0.5
+            org_embedding: 0.5
