@@ -1,0 +1,1 @@
+TODO: describe image processing running and link to submission scripts for phenocoder training. 
