@@ -4,13 +4,13 @@
 #BSUB -q long         # Select queue
 #BSUB -W 180:00         # Wall-clock time (hrs:mins)
 #BSUB -R "rusage[mem=64GB/host]"
-#BSUB -o inhibitors-%J.out # Output file
-#BSUB -e inhibitors-%J.err # Error file
+#BSUB -o pilotscreen-%J.out # Output file
+#BSUB -e pilotscreen-%J.err # Error file
 
 METADATA=whole_mount_tumoroid/metafiles/imaging_data_overview.csv
-CONFIG=whole_mount_tumoroid/configs/config_inhibitors.yaml
+CONFIG=whole_mount_tumoroid/configs/config_pilotscreen.yaml
 
-PLATES=$(awk -F',' '$1 == "inhibitors" {print $2}' $METADATA)
+PLATES=$(awk -F',' '$1 == "pilotscreen" {print $2}' $METADATA)
 PLATES=$(echo $PLATES | tr ' ' '\n' | sort -u | tr '\n' ' ')
 
 for PLATE in $PLATES

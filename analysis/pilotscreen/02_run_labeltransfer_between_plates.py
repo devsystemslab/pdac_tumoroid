@@ -25,7 +25,7 @@ from pathlib import Path
 
 plt.rc("pdf", fonttype=42)
 
-screen = "inhibitors"
+screen = "pilotscreen"
 file = "/pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/configs/params.yaml"
 
 with open(file) as f:
@@ -47,7 +47,7 @@ for cyc in cycle:
     print(cyc)
     mdata_orig_cyc = mu.read_h5mu(Path(dir_results, f"mdata_cycle-{cyc}.h5mu"))
     mdata_new_cyc = mu.read_h5mu(
-        Path(dir_results, f"mdata_cycle-{cyc}_inhibitors_noplatecondition.h5mu")
+        Path(dir_results, f"mdata_cycle-{cyc}_pilotscreen_noplatecondition.h5mu")
     )
 
     subset_orig = mu.MuData({m: mdata_orig_cyc.mod[m] for m in mods})

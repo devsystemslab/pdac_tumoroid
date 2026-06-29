@@ -2,7 +2,7 @@ library(tidyverse)
 library(patchwork)
 
 cycles <- c('cycle_01', 'cycle_03')
-screen <- 'inhibitors'
+screen <- 'pilotscreen'
 dir_data <- 'data/processed'
 
 df <- map(set_names(cycles), function(cycle) {
@@ -78,7 +78,7 @@ p1 <- plot_benchmark(df, type='barplot')
 p2 <- plot_benchmark(df, type='tiles', scores=colnames(df)[str_detect(colnames(df),'ari')])
 
 p <- p1 / p2
-dir_plots <- 'data/processed/inhibitors/plots'
+dir_plots <- 'data/processed/pilotscreen/plots'
 ggsave(plot = p,
        filename = str_c(dir_plots, 'benchmarks.pdf', sep = '/'),
        dpi = 72, units = 'mm', width = 85*2, height = 125*2)

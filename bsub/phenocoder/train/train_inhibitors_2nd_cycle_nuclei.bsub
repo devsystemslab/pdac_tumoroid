@@ -1,18 +1,18 @@
 #!/bin/bash
-#BSUB -J train_phenocoder_inhibitors_2nd_cycle_nuclei # Job name
+#BSUB -J train_phenocoder_pilotscreen_2nd_cycle_nuclei # Job name
 #BSUB -n 2                               # number of tasks
 #BSUB -R "span[hosts=1]"                 # Allocate all tasks in 1 host
 #BSUB -q long                        # Select queue
 #BSUB -W 300:00                          # walltime
 #BSUB -gpu "num=1:j_exclusive=yes"       # Request 1 GPU exclusive for the job
-#BSUB -o train_phenocoder_inhibitors_2nd_cycle_nuclei-%J.out                   # Output file
-#BSUB -e train_phenocoder_inhibitors_2nd_cycle_nuclei-%J.err                   # Error file
+#BSUB -o train_phenocoder_pilotscreen_2nd_cycle_nuclei-%J.out                   # Output file
+#BSUB -e train_phenocoder_pilotscreen_2nd_cycle_nuclei-%J.err                   # Error file
 #BSUB -R "rusage[mem=100GB/host]"        # Memory requirement
 
-TMP_DIR=/home/harmelc/scratch/datasets/inhibitors/2nd_cycle_nuclei
+TMP_DIR=/home/harmelc/scratch/datasets/pilotscreen/2nd_cycle_nuclei
 mkdir -p $TMP_DIR
 echo "TMP_DIR: $TMP_DIR"
-DATA_DIR=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/phenocoder/2nd_cycle_nuclei
+DATA_DIR=data/pilotscreen/phenocoder/2nd_cycle_nuclei
 echo "DATA_DIR: $DATA_DIR"
 # copy DATA_DIR to scratch
 echo "Copying $DATA_DIR to $TMP_DIR"

@@ -14,24 +14,18 @@ from trimesh import Trimesh, util
 from trimesh.smoothing import filter_taubin
 
 
-def filter_adata(
-    adata: ad.AnnData, well: str, plate: str, clusters: list
-) -> ad.AnnData:
+def filter_adata(adata: ad.AnnData, well: str, plate: str, clusters: list) -> ad.AnnData:
     adata = adata[adata.obs["plate_id"] == plate]
     adata = adata[adata.obs["well_id"] == well]
     adata = adata[adata.obs["leiden"].isin(clusters)]
     return adata
 
 
-def get_connected_components(
-    adata: ad.AnnData, radius: int = 100, min_nds=10, min_degree=3
-) -> nx.Graph:
+def get_connected_components(adata: ad.AnnData, radius: int = 100, min_nds=10, min_degree=3) -> nx.Graph:
     pts = adata.obs[["centroid-1", "centroid-0", "z"]].to_numpy()
     # neighbor graph
     G = nx.from_numpy_array(
-        radius_neighbors_graph(
-            pts, radius, mode="distance", include_self=False
-        ).toarray(),
+        radius_neighbors_graph(pts, radius, mode="distance", include_self=False).toarray(),
         create_using=nx.DiGraph,
     ).to_undirected()
     # add pts as node attributes
@@ -148,13 +142,9 @@ def plot_chulls_3d(
             # get trimesh
             trimesh = Trimesh(vertices=nodes, faces=hull.simplices)
             # pymeshfix
-            trimesh.vertices, trimesh.faces = pymeshfix.clean_from_arrays(
-                trimesh.vertices, trimesh.faces
-            )
+            trimesh.vertices, trimesh.faces = pymeshfix.clean_from_arrays(trimesh.vertices, trimesh.faces)
             # smooth
-            trimesh = filter_taubin(
-                trimesh, iterations=n_taubin, lamb=lambda_taubin, nu=nu_taubin
-            )
+            trimesh = filter_taubin(trimesh, iterations=n_taubin, lamb=lambda_taubin, nu=nu_taubin)
             mesh.append(trimesh)
             # plot
             ax.plot_trisurf(
@@ -168,9 +158,7 @@ def plot_chulls_3d(
 
     if G_ecm is not None:
         nodes_ecm = np.array([G_ecm.nodes[v]["pos"] for v in sorted(G_ecm)])
-        edges_ecm = np.array(
-            [(G_ecm.nodes[u]["pos"], G_ecm.nodes[v]["pos"]) for u, v in G_ecm.edges()]
-        )
+        edges_ecm = np.array([(G_ecm.nodes[u]["pos"], G_ecm.nodes[v]["pos"]) for u, v in G_ecm.edges()])
         if add_ecm_nodes:
             ax.scatter(*nodes_ecm.T, s=20, c="black", ec="w")
         if add_ecm_edges:
@@ -205,9 +193,7 @@ def create_surface_plot(lumen_mask_label, organoid_mask, file_name, pad=0):
     # Loop over each lumen
     for label in tqdm(range(1, len(np.unique(lumen_mask_label)))):
         # Extract surfaces and cleanup vertices and faces
-        vertices, faces, _, _ = marching_cubes(
-            (lumen_mask_label == label).astype(int), 0, step_size=1
-        )
+        vertices, faces, _, _ = marching_cubes((lumen_mask_label == label).astype(int), 0, step_size=1)
         vertices_clean, faces_clean = pymeshfix.clean_from_arrays(vertices, faces)
         vertices_clean = np.round(vertices_clean * 4 * 0.347).astype(int)
         # Convert to trimesh and smooth
@@ -225,9 +211,7 @@ def create_surface_plot(lumen_mask_label, organoid_mask, file_name, pad=0):
         )
 
     # Do the same for whole organoid in gray
-    vertices, faces, _, _ = marching_cubes(
-        (organoid_mask == 1).astype(int), 0, step_size=2
-    )
+    vertices, faces, _, _ = marching_cubes((organoid_mask == 1).astype(int), 0, step_size=2)
     vertices_clean, faces_clean = pymeshfix.clean_from_arrays(vertices, faces)
     vertices_clean = np.round(vertices_clean * 4 * 0.347).astype(int)
 
@@ -290,12 +274,8 @@ def process_well(
     adata_ducts = filter_adata(mdata[mod], well, plate, clusters=clusters_ducts)
     adata_fibro = filter_adata(mdata[mod], well, plate, clusters=clusters_fibro)
     # get connected components and graph
-    graph_ducts = get_connected_components(
-        adata_ducts, radius=100, min_nds=min_nds_ducts, min_degree=min_degree_ducts
-    )
-    graph_fibro = get_connected_components(
-        adata_fibro, radius=200, min_nds=mind_nds_fibro, min_degree=min_degree_fibro
-    )
+    graph_ducts = get_connected_components(adata_ducts, radius=100, min_nds=min_nds_ducts, min_degree=min_degree_ducts)
+    graph_fibro = get_connected_components(adata_fibro, radius=200, min_nds=mind_nds_fibro, min_degree=min_degree_fibro)
     # plot 2d
     plot_connected_components_2d(graph_ducts)
     plot_connected_components_2d(graph_fibro)
@@ -321,8 +301,8 @@ def process_well(
 
 if __name__ == "__main__":
     # set paths
-    dir_adata = "data/processed/inhibitors/anndata"
-    dir_output = "data/processed/inhibitors/graph_segmentations"
+    dir_adata = "data/processed/pilotscreen/anndata"
+    dir_output = "data/processed/pilotscreen/graph_segmentations"
     # set files
     file_cycle_01 = f"{dir_adata}/mdata_cycle-01.h5mu"
     file_cycle_03 = f"{dir_adata}/mdata_cycle-03.h5mu"

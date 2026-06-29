@@ -11,7 +11,7 @@
 
 PLATES=$(awk -F',' '$1 == "tumoroidscreen" {print $2}' /pstore/home/harmelc/tumoroid/whole_mount_tumoroid/metafiles/imaging_data_overview.csv)
 PLATES=$(echo $PLATES | tr ' ' '\n' | sort -u | tr '\n' ' ')
-DIR_SCREEN=/pstore/data/ihb-tumoroidscreen/data/processed/tumoroidscreen
+DIR_SCREEN=data/tumoroidscreen
 PYTHON_SCRIPT=/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/phenocoder/dataset.py
 for PLATE in $PLATES
 do
@@ -25,4 +25,3 @@ do
     DIR_OUTPUT=$DIR_SCREEN/phenocoder/2nd_cycle/$PLATE-03
     python $PYTHON_SCRIPT $DIR_INPUT $DIR_OUTPUT --max_workers 12
 done
-

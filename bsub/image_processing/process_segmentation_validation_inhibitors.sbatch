@@ -8,7 +8,7 @@
 #SBATCH -e segmentation_validation-%j.err
 export PYTHONPATH="${PYTHONPATH}:/pstore/home/harmelc/tumoroid_screen"
 METADATA=whole_mount_tumoroid/configs/imaging_data_overview.csv
-CONFIG=whole_mount_tumoroid/configs/config_segmentation_validation_inhibitors.yaml
+CONFIG=whole_mount_tumoroid/configs/config_segmentation_validation_pilotscreen.yaml
 PLATE='004'
 echo "Processing plate $PLATE"
 python whole_mount_tumoroid/image_processing/cli.py $PLATE --config $CONFIG

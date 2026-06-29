@@ -9,7 +9,7 @@ from phenocoder.features import run_feature_processing
 from phenocoder.spatial import run_spatial_feature_processing
 
 if __name__ == "__main__":
-    screen = "inhibitors"
+    screen = "pilotscreen"
     file = "whole_mount_tumoroid/configs/params.yaml"
     with open(file) as f:
         params = yaml.load(f, Loader=yaml.FullLoader)
@@ -19,9 +19,7 @@ if __name__ == "__main__":
         Path(params["dir_screen"], "plate_layout.csv"),
         dtype={"plate": str, "well": str},
     )
-    df_plate_layouts.rename(
-        columns={"plate": "plate_id", "well": "well_id"}, inplace=True
-    )
+    df_plate_layouts.rename(columns={"plate": "plate_id", "well": "well_id"}, inplace=True)
     df_plate_layouts = df_plate_layouts.map(str)
     dir_results = Path(params["dir_screen"], "anndata")
     dir_results.mkdir(parents=True, exist_ok=True)
@@ -64,11 +62,7 @@ if __name__ == "__main__":
     cycles = {"01": "source", "03": "target"}
     for cycle in cycles.keys():
         print(f"Running phenocoder pipeline for cycle {cycle}...")
-        markers = {
-            k.replace(f"{cycles[cycle]}_", ""): v
-            for k, v in params["markers"].items()
-            if cycles[cycle] in k
-        }
+        markers = {k.replace(f"{cycles[cycle]}_", ""): v for k, v in params["markers"].items() if cycles[cycle] in k}
         mdata = run_feature_processing(
             plates=params["plates"],
             markers=markers,

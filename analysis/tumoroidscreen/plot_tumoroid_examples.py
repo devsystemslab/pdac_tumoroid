@@ -3,7 +3,7 @@ from pathlib import Path
 import muon as mu
 import pandas as pd
 import yaml
-from analysis.inhibitors.generate_example_images import (
+from analysis.pilotscreen.generate_example_images import (
     plot_dotplot,
     plot_organoid,
     plot_umap,
@@ -47,39 +47,25 @@ if __name__ == "__main__":
         size=2,
     )
 
-    mdata_cycle_01.mod["nuclei"].obs["leiden_phenocoder"] = mdata_cycle_01.mod[
-        "phenocoder"
-    ].obs["leiden"]
-    mdata_cycle_03.mod["nuclei"].obs["leiden_phenocoder"] = mdata_cycle_03.mod[
-        "phenocoder"
-    ].obs["leiden"]
+    mdata_cycle_01.mod["nuclei"].obs["leiden_phenocoder"] = mdata_cycle_01.mod["phenocoder"].obs["leiden"]
+    mdata_cycle_03.mod["nuclei"].obs["leiden_phenocoder"] = mdata_cycle_03.mod["phenocoder"].obs["leiden"]
 
     plot_dotplot(mdata_cycle_01["nuclei"], cycle="01", dir_screen=dir_screen)
 
     plot_dotplot(mdata_cycle_03["nuclei"], cycle="03", dir_screen=dir_screen)
 
-    def generate_spatial_plots_organoid(
-        well, plate, dir_screen, mdata_cycle_01, mdata_cycle_03
-    ):
+    def generate_spatial_plots_organoid(well, plate, dir_screen, mdata_cycle_01, mdata_cycle_03):
         # plot example organoid for figure
-        Path(f"{dir_screen}/example_overlays/{plate}-01/{well}").mkdir(
-            parents=True, exist_ok=True
-        )
-        Path(f"{dir_screen}/example_overlays/{plate}-03/{well}").mkdir(
-            parents=True, exist_ok=True
-        )
+        Path(f"{dir_screen}/example_overlays/{plate}-01/{well}").mkdir(parents=True, exist_ok=True)
+        Path(f"{dir_screen}/example_overlays/{plate}-03/{well}").mkdir(parents=True, exist_ok=True)
 
         io.imsave(
             f"{dir_screen}/example_overlays/{plate}-01/{well}/plot.png",
-            plot_organoid(
-                f"{well}_{plate}", mdata_cycle_01["phenocoder"], edgecolors="white"
-            ),
+            plot_organoid(f"{well}_{plate}", mdata_cycle_01["phenocoder"], edgecolors="white"),
         )
         io.imsave(
             f"{dir_screen}/example_overlays/{plate}-03/{well}/plot.png",
-            plot_organoid(
-                f"{well}_{plate}", mdata_cycle_03["phenocoder"], edgecolors="white"
-            ),
+            plot_organoid(f"{well}_{plate}", mdata_cycle_03["phenocoder"], edgecolors="white"),
         )
         # 3d projection plots
         io.imsave(
@@ -126,18 +112,10 @@ if __name__ == "__main__":
             ),
         )
 
-    generate_spatial_plots_organoid(
-        "C03", "HM005", dir_screen, mdata_cycle_01, mdata_cycle_03
-    )
-    generate_spatial_plots_organoid(
-        "H20", "HM004", dir_screen, mdata_cycle_01, mdata_cycle_03
-    )
-    generate_spatial_plots_organoid(
-        "P23", "HM006", dir_screen, mdata_cycle_01, mdata_cycle_03
-    )
-    generate_spatial_plots_organoid(
-        "J03", "HM003", dir_screen, mdata_cycle_01, mdata_cycle_03
-    )
+    generate_spatial_plots_organoid("C03", "HM005", dir_screen, mdata_cycle_01, mdata_cycle_03)
+    generate_spatial_plots_organoid("H20", "HM004", dir_screen, mdata_cycle_01, mdata_cycle_03)
+    generate_spatial_plots_organoid("P23", "HM006", dir_screen, mdata_cycle_01, mdata_cycle_03)
+    generate_spatial_plots_organoid("J03", "HM003", dir_screen, mdata_cycle_01, mdata_cycle_03)
 
     # load examples data
     dir_analysis = "whole_mount_tumoroid/analysis/tumoroidscreen"
@@ -150,22 +128,16 @@ if __name__ == "__main__":
 
     # filter adata_org_example by well_id plate_id present in df_examples
     adata_org_example.obs["id"] = (
-        adata_org_example.obs["well_id"].astype(str)
-        + "_"
-        + adata_org_example.obs["plate_id"].astype(str)
+        adata_org_example.obs["well_id"].astype(str) + "_" + adata_org_example.obs["plate_id"].astype(str)
     )
     # sample 8 DMS0 ctrls ids
     dmso_ids = (
         adata_org_example[adata_org_example.obs["negative_control"] == "True"]
         .obs["id"]
-        .sample(
-            adata_org_example.obs["id"].isin(df_examples["id"]).sum(), random_state=0
-        )
+        .sample(adata_org_example.obs["id"].isin(df_examples["id"]).sum(), random_state=0)
         .tolist()
     )
-    adata_org_example = adata_org_example[
-        adata_org_example.obs["id"].isin(dmso_ids + df_examples["id"].tolist())
-    ]
+    adata_org_example = adata_org_example[adata_org_example.obs["id"].isin(dmso_ids + df_examples["id"].tolist())]
 
     # lut dict
     lut_dict = {

@@ -1,5 +1,5 @@
 # source utils
-source('whole_mount_tumoroid/analysis/inhibitors/utils.R')
+source('whole_mount_tumoroid/analysis/pilotscreen/utils.R')
 # load libraries
 library(ggridges)
 library(RColorBrewer)

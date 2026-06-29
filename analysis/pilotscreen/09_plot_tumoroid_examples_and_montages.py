@@ -12,19 +12,14 @@ import seaborn as sns
 import yaml
 from matplotlib.colors import ListedColormap
 from PIL import Image
+from scipy.cluster import hierarchy as sch
 from skimage import io
 from tqdm import tqdm
 
-from phenocoder.plot import (
-    generate_example_patch_montage,
-    generate_examples,
-    plot_organoid_with_image,
-)
-
-sc._settings.settings._vector_friendly = True
-from scipy.cluster import hierarchy as sch
+from phenocoder.plot import generate_examples
 
 plt.rc("pdf", fonttype=42)
+sc._settings.settings._vector_friendly = True
 
 
 def order_genes(adata, preselected_genes=None):
@@ -48,9 +43,7 @@ def plot_dotplot(adata, cycle, dir_screen, remove_cluster: list = None):
         dendrogram=True,
         return_fig=True,
     )
-    dp.add_totals(color="grey").style(
-        dot_edge_color="black", dot_edge_lw=0.5, cmap="Greys", dot_max=0.5, dot_min=0.1
-    )
+    dp.add_totals(color="grey").style(dot_edge_color="black", dot_edge_lw=0.5, cmap="Greys", dot_max=0.5, dot_min=0.1)
     dp.savefig(f"{dir_screen}/plots/dotplot_cycle_{cycle}.pdf")
     plt.close("all")
 
@@ -58,23 +51,17 @@ def plot_dotplot(adata, cycle, dir_screen, remove_cluster: list = None):
 def plot_umap(adata, cycle, dir_screen, size=10, color="leiden"):
     n_colors = adata.obs[color].nunique()
     tab20 = sns.color_palette("tab20", n_colors=n_colors)
-    adata.uns["leiden_colors"] = [
-        f"#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}" for r, g, b in tab20
-    ]
+    adata.uns["leiden_colors"] = [f"#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}" for r, g, b in tab20]
     sc._settings.settings._vector_friendly = True
     fig = sc.pl.umap(adata, color=color, return_fig=True, show=False, s=size)
-    plt.savefig(
-        f"{dir_screen}/plots/umap_leiden_cycle_{cycle}.pdf", format="pdf", dpi=300
-    )
+    plt.savefig(f"{dir_screen}/plots/umap_leiden_cycle_{cycle}.pdf", format="pdf", dpi=300)
     plt.close("all")
 
 
 def plot_paga(adata):
     n_colors = adata.obs["leiden"].nunique()
     tab20 = sns.color_palette("tab20", n_colors=n_colors)
-    adata.uns["leiden_colors"] = [
-        f"#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}" for r, g, b in tab20
-    ]
+    adata.uns["leiden_colors"] = [f"#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}" for r, g, b in tab20]
     sc.tl.paga(adata, groups="leiden")
     sc.pl.paga(adata, color="leiden", node_size_scale=10, edge_width_scale=2)
 
@@ -114,25 +101,16 @@ def plot_organoid(
     :param add_legend:
     :return:
     """
-    cmap = ListedColormap(
-        sns.color_palette("tab20", n_colors=adata.obs["leiden"].nunique())
-    )
+    cmap = ListedColormap(sns.color_palette("tab20", n_colors=adata.obs["leiden"].nunique()))
     # specify color look up per leiden and add to adata.obs using cmap
     if "id" not in adata.obs.columns:
-        adata.obs["id"] = (
-            adata.obs["well_id"].astype(str) + "_" + adata.obs["plate_id"].astype(str)
-        )
+        adata.obs["id"] = adata.obs["well_id"].astype(str) + "_" + adata.obs["plate_id"].astype(str)
 
     adata = adata[adata.obs["id"] == id]
     if cut_open:
         center_centroid_0 = 3814 / 2
         center_centroid_1 = 3814 / 2
-        adata = adata[
-            ~(
-                (adata.obs["centroid-0"] < center_centroid_0)
-                & (adata.obs["centroid-1"] > center_centroid_1)
-            )
-        ]
+        adata = adata[~((adata.obs["centroid-0"] < center_centroid_0) & (adata.obs["centroid-1"] > center_centroid_1))]
     np.random.seed(0)
     random_indices = np.random.permutation(list(range(adata.shape[0])))
     adata = adata[random_indices, :]
@@ -221,8 +199,7 @@ def plot_organoid(
         ax.set_facecolor(bg_color)
     if add_legend:
         handles = [
-            mpatches.Patch(color=cmap.colors[i], label=f"Cluster {i}")
-            for i in range(adata.obs["leiden"].nunique())
+            mpatches.Patch(color=cmap.colors[i], label=f"Cluster {i}") for i in range(adata.obs["leiden"].nunique())
         ]
         ax.legend(
             handles=handles,
@@ -320,44 +297,28 @@ def generate_condition_montages(
                     if compound not in compounds_condition_present:
                         # add empty row
                         empty_row = pd.DataFrame({"compound": [compound]})
-                        df_tmp_conc = pd.concat(
-                            [df_tmp_conc, empty_row], ignore_index=True
-                        )
+                        df_tmp_conc = pd.concat([df_tmp_conc, empty_row], ignore_index=True)
                 # arrange by compounds according to order compounds
-                df_tmp_conc = (
-                    df_tmp_conc.set_index("compound").loc[order_compounds].reset_index()
-                )
+                df_tmp_conc = df_tmp_conc.set_index("compound").loc[order_compounds].reset_index()
             assert df_tmp_conc.shape[0] == len(order_compounds)
             files_cycle_01 = df_tmp_conc["file_cycle_1"].values
             files_cycle_03 = df_tmp_conc["file_cycle_3"].values
             ids_tmp = df_tmp_conc["id"].values
             imgs_01.append(np.vstack([read_image(file) for file in files_cycle_01]))
             imgs_03.append(np.vstack([read_image(file) for file in files_cycle_03]))
-            plots_01.append(
-                np.vstack([plot_for_montage(id, adata_cycle_01) for id in ids_tmp])
-            )
-            plots_03.append(
-                np.vstack([plot_for_montage(id, adata_cycle_03) for id in ids_tmp])
-            )
+            plots_01.append(np.vstack([plot_for_montage(id, adata_cycle_01) for id in ids_tmp]))
+            plots_03.append(np.vstack([plot_for_montage(id, adata_cycle_03) for id in ids_tmp]))
         imgs_01 = np.hstack(imgs_01)
         imgs_03 = np.hstack(imgs_03)
         plots_01 = np.hstack(plots_01)
         plots_03 = np.hstack(plots_03)
-        img = np.vstack(
-            [imgs_01, np.zeros((25, imgs_01.shape[1], 3), dtype=np.uint8), imgs_03]
-        )
-        plot = np.vstack(
-            [plots_01, np.zeros((25, plots_01.shape[1], 4), dtype=np.uint8), plots_03]
-        )
+        img = np.vstack([imgs_01, np.zeros((25, imgs_01.shape[1], 3), dtype=np.uint8), imgs_03])
+        plot = np.vstack([plots_01, np.zeros((25, plots_01.shape[1], 4), dtype=np.uint8), plots_03])
         # save montage
         io.imsave(f"{dir_montages}/montage_{timepoint}.png", img)
         io.imsave(f"{dir_montages}/montage_{timepoint}_plot.png", plot)
-        imgs_timepoints.append(
-            np.hstack([img, np.zeros((img.shape[0], 25, 3), dtype=np.uint8)])
-        )
-        plots_timepoints.append(
-            np.hstack([plot, np.zeros((plot.shape[0], 25, 4), dtype=np.uint8)])
-        )
+        imgs_timepoints.append(np.hstack([img, np.zeros((img.shape[0], 25, 3), dtype=np.uint8)]))
+        plots_timepoints.append(np.hstack([plot, np.zeros((plot.shape[0], 25, 4), dtype=np.uint8)]))
     img = np.hstack(imgs_timepoints)
     plot = np.hstack(plots_timepoints)
     io.imsave(f"{dir_montages}/montage_all.png", img)
@@ -366,14 +327,14 @@ def generate_condition_montages(
 
 if __name__ == "__main__":
     # load params yaml
-    screen = "inhibitors"
+    screen = "pilotscreen"
     file = "whole_mount_tumoroid/configs/params.yaml"
     with open(file) as f:
         params = yaml.load(f, Loader=yaml.FullLoader)
         params = params[screen]
 
     # set paths
-    dir_screen = "data/processed/inhibitors"
+    dir_screen = "data/processed/pilotscreen"
     dir_adata = f"{dir_screen}/anndata"
     file_org = f"{dir_adata}/mdata_org_combined.h5mu"
     file_cycle_01 = f"{dir_adata}/mdata_cycle-01.h5mu"
@@ -388,12 +349,8 @@ if __name__ == "__main__":
     plot_umap(mdata_cycle_01["phenocoder"], cycle="01", size=0.1)
     plot_umap(mdata_cycle_03["phenocoder"], cycle="03", size=0.1)
 
-    mdata_cycle_01.mod["nuclei"].obs["leiden_phenocoder"] = mdata_cycle_01.mod[
-        "phenocoder"
-    ].obs["leiden"]
-    mdata_cycle_03.mod["nuclei"].obs["leiden_phenocoder"] = mdata_cycle_03.mod[
-        "phenocoder"
-    ].obs["leiden"]
+    mdata_cycle_01.mod["nuclei"].obs["leiden_phenocoder"] = mdata_cycle_01.mod["phenocoder"].obs["leiden"]
+    mdata_cycle_03.mod["nuclei"].obs["leiden_phenocoder"] = mdata_cycle_03.mod["phenocoder"].obs["leiden"]
 
     plot_dotplot(mdata_cycle_01["nuclei"], cycle="01", remove_cluster=["5"])
 
@@ -454,42 +411,28 @@ if __name__ == "__main__":
     )
 
     # example anndata
-    file_examples = (
-        "whole_mount_tumoroid/metafiles/positive_ctrls_examples_inhibitors.csv"
-    )
+    file_examples = "whole_mount_tumoroid/metafiles/positive_ctrls_examples_pilotscreen.csv"
     adata_org_example = mdata_org["phenocoder_combined"].copy()
     df_examples = pd.read_csv(file_examples, dtype={"well_id": str, "plate_id": str})
     df_examples["id"] = df_examples["well_id"] + "_" + df_examples["plate_id"]
     df_examples = df_examples[~df_examples["id"].isin(["E16_004"])]
     # filter adata_org_example by well_id plate_id present in df_examples
     adata_org_example.obs["id"] = (
-        adata_org_example.obs["well_id"].astype(str)
-        + "_"
-        + adata_org_example.obs["plate_id"].astype(str)
+        adata_org_example.obs["well_id"].astype(str) + "_" + adata_org_example.obs["plate_id"].astype(str)
     )
-    adata_org_example = adata_org_example[
-        adata_org_example.obs["id"].isin(df_examples["id"])
-    ]
+    adata_org_example = adata_org_example[adata_org_example.obs["id"].isin(df_examples["id"])]
 
     adata_cycle_01_example = mdata_cycle_01["phenocoder"].copy()
     adata_cycle_01_example.obs["id"] = (
-        adata_cycle_01_example.obs["well_id"].astype(str)
-        + "_"
-        + adata_cycle_01_example.obs["plate_id"].astype(str)
+        adata_cycle_01_example.obs["well_id"].astype(str) + "_" + adata_cycle_01_example.obs["plate_id"].astype(str)
     )
-    adata_cycle_01_example = adata_cycle_01_example[
-        adata_cycle_01_example.obs["id"].isin(df_examples["id"])
-    ]
+    adata_cycle_01_example = adata_cycle_01_example[adata_cycle_01_example.obs["id"].isin(df_examples["id"])]
 
     adata_cycle_03_example = mdata_cycle_03["phenocoder"].copy()
     adata_cycle_03_example.obs["id"] = (
-        adata_cycle_03_example.obs["well_id"].astype(str)
-        + "_"
-        + adata_cycle_03_example.obs["plate_id"].astype(str)
+        adata_cycle_03_example.obs["well_id"].astype(str) + "_" + adata_cycle_03_example.obs["plate_id"].astype(str)
     )
-    adata_cycle_03_example = adata_cycle_03_example[
-        adata_cycle_03_example.obs["id"].isin(df_examples["id"])
-    ]
+    adata_cycle_03_example = adata_cycle_03_example[adata_cycle_03_example.obs["id"].isin(df_examples["id"])]
 
     # lut dict
     lut_dict = {

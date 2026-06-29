@@ -74,7 +74,7 @@ def render_ducts_and_fibroblast_network(file_ducts: str, file_graph_fibro: str):
 
 
 if __name__ == "__main__":
-    dir_files = "whole_mount_tumoroid/analysis/inhibitors/graph_segmentations"
+    dir_files = "whole_mount_tumoroid/analysis/pilotscreen/graph_segmentations"
     file_ducts = os.path.join(dir_files, "ducts_004-03-J08.ply")
     file_fibro = os.path.join(dir_files, "graph_fibro-004-03-J08.joblib")
     render_ducts_and_fibroblast_network(file_ducts, file_fibro)

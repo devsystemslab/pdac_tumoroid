@@ -1,12 +1,12 @@
 #!/bin/bash
-#BSUB -J postprocessing_inhibitors  # Job name
+#BSUB -J postprocessing_pilotscreen  # Job name
 #BSUB -n 2                               # number of tasks
 #BSUB -R "span[hosts=1]"                 # Allocate all tasks in 1 host
 #BSUB -q long                        # Select queue
 #BSUB -W 72:00                          # walltime
 #BSUB -gpu "num=1:j_exclusive=yes"       # Request 1 GPU exclusive for the job
-#BSUB -o logs/postprocessing_inhibitors-%J.out                   # Output file
-#BSUB -e logs/postprocessing_inhibitors-%J.err                   # Error file
+#BSUB -o logs/postprocessing_pilotscreen-%J.out                   # Output file
+#BSUB -e logs/postprocessing_pilotscreen-%J.err                   # Error file
 #BSUB -R "rusage[mem=100GB/host]"
 
-python /pstore/home/harmelc/tumoroid/whole_mount_tumoroid/analysis/inhibitors/run_postprocesing.py
+python /pstore/home/harmelc/tumoroid/whole_mount_tumoroid/analysis/pilotscreen/run_postprocesing.py

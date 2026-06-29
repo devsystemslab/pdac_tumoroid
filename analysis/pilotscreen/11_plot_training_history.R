@@ -2,8 +2,8 @@ library(tidyverse)
 library(patchwork)
 library(RColorBrewer)
 
-dir_screen <- 'data/processed/inhibitors'
-dir_analysis <- 'whole_mount_tumoroid/analysis/inhibitors'
+dir_screen <- 'data/processed/pilotscreen'
+dir_analysis <- 'whole_mount_tumoroid/analysis/pilotscreen'
 dir_tensorboard <- str_c(dir_analysis,'plots','tensorboard', sep = '/')
 datasets <- list.files(dir_tensorboard) %>% set_names()
 # history plots - KL, reconstruction loss, epoch loss
@@ -19,7 +19,7 @@ read_history_files <- function(dataset, dir_data){
   return(df)
 }
 df <- map(datasets,read_history_files,dir_data=dir_tensorboard) %>% bind_rows(.id='cycle') %>%
-  mutate(cycle=str_replace(cycle,'inhibitors_cycle','cycle ') %>% str_to_sentence(),
+  mutate(cycle=str_replace(cycle,'pilotscreen_cycle','cycle ') %>% str_to_sentence(),
          type=str_replace(type,'_', ' ') %>% str_to_sentence())
 df$type <- factor(df$type, levels = c('Loss','Reconstruction loss','Kl loss','Learning rate'))
 

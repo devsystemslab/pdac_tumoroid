@@ -9,10 +9,10 @@
 #SBATCH --partition=batch_gpu                       # GPU partition
 #SBATCH --qos=3d
 
-TMP_DIR=/home/schulzp9/scratch/datasets/inhibitors/2nd_cycle_nuclei
+TMP_DIR=/home/schulzp9/scratch/datasets/pilotscreen/2nd_cycle_nuclei
 #mkdir -p $TMP_DIR
 echo "TMP_DIR: $TMP_DIR"
-DATA_DIR=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/phenocoder/2nd_cycle_nuclei
+DATA_DIR=data/pilotscreen/phenocoder/2nd_cycle_nuclei
 echo "DATA_DIR: $DATA_DIR"
 # copy DATA_DIR to scratch
 #echo "Copying $DATA_DIR to $TMP_DIR"

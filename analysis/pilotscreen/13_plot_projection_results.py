@@ -7,7 +7,7 @@ import pandas as pd
 import scanpy as sc
 import skimage
 import yaml
-from analysis.inhibitors.generate_example_images import (
+from analysis.pilotscreen.generate_example_images import (
     order_genes,
     plot_dotplot,
     plot_organoid,
@@ -20,7 +20,7 @@ from skimage import io
 from image_processing.montage import load_well, rgb_overlay
 from image_processing.utils import get_metadata, scale_image
 
-screen = "inhibitors"
+screen = "pilotscreen"
 file = "/pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/configs/params.yaml"
 
 with open(file) as f:

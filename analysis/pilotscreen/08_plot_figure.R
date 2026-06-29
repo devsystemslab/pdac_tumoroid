@@ -1,5 +1,5 @@
 # source utils
-source('whole_mount_tumoroid/analysis/inhibitors/utils.R')
+source('analysis/pilotscreen/utils.R')
 
 # load libraries
 library(ggridges)
@@ -14,9 +14,9 @@ colors_compound <- c(`Ac-Gly-BoroPro` = "#1f77b4", Bortezomib = "#ff7f0e",
                      VER155008 = "#c49c94")
 
 # set directories
-dir_screen <- 'data/processed/inhibitors'
-dir_adata <- 'data/processed/inhibitors/anndata'
-dir_plots <- 'data/processed/inhibitors/plots'
+dir_screen <- 'data/processed/pilotscreen'
+dir_adata <- 'data/processed/pilotscreen/anndata'
+dir_plots <- 'data/processed/pilotscreen/plots'
 
 # read mdata
 mdata_org <- read_mdata(str_c(dir_adata,'mdata_org_combined.h5mu', sep='/'))
@@ -140,9 +140,9 @@ p6 <- ggplot(data=NULL) +
   theme_void()
 
 p_umaps <- (p1 / p2/ p6) | (p3 / p4 / p5)
-ggsave('data/processed/inhibitors/plots/organoid_embeddings_umaps_only.pdf', plot = p_umaps,
+ggsave('data/processed/pilotscreen/plots/organoid_embeddings_umaps_only.pdf', plot = p_umaps,
        dpi = 112, unit = 'mm', width = 400.05, height = 215.22)
-ggsave('data/processed/inhibitors/plots/organoid_embeddings_umaps_only.png', plot = p_umaps,
+ggsave('data/processed/pilotscreen/plots/organoid_embeddings_umaps_only.png', plot = p_umaps,
        dpi = 112, unit = 'mm', width = 400.05, height = 215.22)
 # plot organoid embedding - data handling, distances
 cluster_data <- prepare_cluster_data(mdata_org)
@@ -196,14 +196,14 @@ p7 <- ggplot(cluster_data$df_plot, aes(x = compound_fig, y = frac, fill=leiden))
          text=element_text(size=6),
          strip.background = element_blank())
 
-ggsave('data/processed/inhibitors/plots/organoid_embeddings_cluster_composition.pdf',
+ggsave('data/processed/pilotscreen/plots/organoid_embeddings_cluster_composition.pdf',
        plot = p7,
        dpi = 72, unit = 'mm', width = 180, height=40)
 
 # merge figure
 p_umaps <- p1 / p2 / p3 / p4 / p5
 p <- (p_images | p_umaps | p6) + plot_layout(widths = c(2.5, 1, 2.5))
-ggsave('data/processed/inhibitors/plots/organoid_embeddings.pdf', plot = p,
+ggsave('data/processed/pilotscreen/plots/organoid_embeddings.pdf', plot = p,
        dpi = 112, unit = 'mm', width = 400.05, height = 215.22)
 
 # mahalanobis distances
@@ -241,7 +241,7 @@ p <- ggraph(g, layout = 'fr') +
   #geom_node_text(aes(label = name), repel = TRUE, size = 2.5) +
   theme_void() +
   theme(legend.position = 'none')
-ggsave('data/processed/inhibitors/plots/correlation_graph_features.png', plot = p,
+ggsave('data/processed/pilotscreen/plots/correlation_graph_features.png', plot = p,
        dpi = 112, unit = 'mm', width = 400.05, height = 400.05)
 
 bind_cols(list_mahal$df_features,mdata_org['phenocoder_combined']$X %>% as_tibble()) %>% left_join(list_mahal$mahal_results$distance['DMSO',] %>% enframe(name='condition', value='distance_dmso')) -> df_features_org_all
@@ -253,7 +253,7 @@ p2 <- ggplot(df_features_org_all %>% filter(condition != 'DMSO'), aes(x=log1p(di
 library(pheatmap)
 plot = pheatmap(as.matrix(df_corr_clean), show_rownames = FALSE, show_colnames = FALSE, treeheight_row=0, treeheight_col = 0, silent = TRUE, cellheight = 1, cellwidth = 1)
 # save with ggsave
-ggsave('data/processed/inhibitors/plots/correlation_heatmap_features.png', plot = plot[[4]],
+ggsave('data/processed/pilotscreen/plots/correlation_heatmap_features.png', plot = plot[[4]],
        dpi = 112, unit = 'mm', width = 400.05, height = 400.05)
 
 
@@ -297,7 +297,7 @@ p_z_prime <- ggplot(df_plot_z_prime, aes(x=timepoint, y=conc, fill=z_prime_categ
          axis.ticks.y = element_blank(),
    axis.ticks.x = element_blank())
 
-ggsave('data/processed/inhibitors/plots/z_prime.pdf', plot = p_z_prime,
+ggsave('data/processed/pilotscreen/plots/z_prime.pdf', plot = p_z_prime,
        dpi = 112, unit = 'mm', width = 400.05, height = 215.22)
 
 # interaction terms
@@ -315,5 +315,5 @@ p_heatmap_merged <-  plot_interaction_heatmap(list_scores, 'merged',
                          list_df_de = df_de_conditions,
                          list_mahal)
 
-ggsave('data/processed/inhibitors/plots/interaction_heatmap_merged.pdf', plot = p_heatmap_merged[[4]],
+ggsave('data/processed/pilotscreen/plots/interaction_heatmap_merged.pdf', plot = p_heatmap_merged[[4]],
        dpi = 112, unit = 'mm', width = 400.05, height = 215.22)

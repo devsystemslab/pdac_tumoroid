@@ -8,24 +8,22 @@
 #BSUB -e phenocoder-data-%J_%I.err   # Error files
 #BSUB -R "rusage[mem=100GB/host]"
 
-DIR_INPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/004/004-01/TIF_OVR_BG
-DIR_SEGMENTED=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/004/004-01/features/nuclei/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/phenocoder/1st_cycle_nuclei/004-01
+DIR_INPUT=data/inhibitors/004/004-01/TIF_OVR_BG
+DIR_SEGMENTED=data/inhibitors/004/004-01/features/nuclei/TIF_OVR_BG
+DIR_OUTPUT=data/inhibitors/phenocoder/1st_cycle_nuclei/004-01
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 500000
 
-DIR_INPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/005/005-01/TIF_OVR_BG
-DIR_SEGMENTED=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/005/005-01/features/nuclei/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/phenocoder/1st_cycle_nuclei/005-01
+DIR_INPUT=data/inhibitors/005/005-01/TIF_OVR_BG
+DIR_SEGMENTED=data/inhibitors/005/005-01/features/nuclei/TIF_OVR_BG
+DIR_OUTPUT=data/inhibitors/phenocoder/1st_cycle_nuclei/005-01
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 500000
 
-DIR_INPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/004/004-03/TIF_OVR_BG
-DIR_SEGMENTED=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/004/004-03/features/nuclei/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/phenocoder/2nd_cycle_nuclei/004-03
+DIR_INPUT=data/inhibitors/004/004-03/TIF_OVR_BG
+DIR_SEGMENTED=data/inhibitors/004/004-03/features/nuclei/TIF_OVR_BG
+DIR_OUTPUT=data/inhibitors/phenocoder/2nd_cycle_nuclei/004-03
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 500000
 
-DIR_INPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/005/005-03/TIF_OVR_BG
-DIR_SEGMENTED=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/005/005-03/features/nuclei/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroidscreen/data/processed/inhibitors/phenocoder/2nd_cycle_nuclei/005-03
+DIR_INPUT=data/inhibitors/005/005-03/TIF_OVR_BG
+DIR_SEGMENTED=data/inhibitors/005/005-03/features/nuclei/TIF_OVR_BG
+DIR_OUTPUT=data/inhibitors/phenocoder/2nd_cycle_nuclei/005-03
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 500000
-
-

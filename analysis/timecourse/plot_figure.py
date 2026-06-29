@@ -27,9 +27,7 @@ if __name__ == "__main__":
             np.asarray(
                 [
                     io.imread(Path(dir_images, "TIF_OVR", file))
-                    for file in df_images[df_images["channel_id"] == channel][
-                        "file"
-                    ].values
+                    for file in df_images[df_images["channel_id"] == channel]["file"].values
                 ]
             )
         )
@@ -73,21 +71,13 @@ if __name__ == "__main__":
         if axis == 0:
             # make 2D array from blend
             blend = np.tile(blend, (shape[1 - axis], 1)).T
-            overlap_img = (img_ref[-overlap:, :] * blend) + (
-                img_add[:overlap, :] * (1 - blend)
-            )
-            img = np.concatenate(
-                [img_ref[:-overlap, :], overlap_img, img_add[overlap:, :]], axis=axis
-            )
+            overlap_img = (img_ref[-overlap:, :] * blend) + (img_add[:overlap, :] * (1 - blend))
+            img = np.concatenate([img_ref[:-overlap, :], overlap_img, img_add[overlap:, :]], axis=axis)
         elif axis == 1:
             # make 2D array from blend
             blend = np.tile(blend, (shape[1 - axis], 1))
-            overlap_img = (img_ref[:, -overlap:] * blend) + (
-                img_add[:, :overlap] * (1 - blend)
-            )
-            img = np.concatenate(
-                [img_ref[:, :-overlap], overlap_img, img_add[:, overlap:]], axis=axis
-            )
+            overlap_img = (img_ref[:, -overlap:] * blend) + (img_add[:, :overlap] * (1 - blend))
+            img = np.concatenate([img_ref[:, :-overlap], overlap_img, img_add[:, overlap:]], axis=axis)
         else:
             raise ValueError("axis must be 0 or 1")
         return img
@@ -190,15 +180,8 @@ if __name__ == "__main__":
         return img
 
     def get_overlay(imgs, luts, gammas, rotate=True, four_channel=False):
-        imgs = np.asarray(
-            [adjust_gamma(imgs[i], gammas[i]) for i in range(imgs.shape[0])]
-        )
-        imgs = np.asarray(
-            [
-                scale_image(imgs[i], percentiles=luts[i], range=(0, 1))
-                for i in range(imgs.shape[0])
-            ]
-        )
+        imgs = np.asarray([adjust_gamma(imgs[i], gammas[i]) for i in range(imgs.shape[0])])
+        imgs = np.asarray([scale_image(imgs[i], percentiles=luts[i], range=(0, 1)) for i in range(imgs.shape[0])])
         imgs_overlay = overlay_colors(imgs, rotate=rotate, four_channel=four_channel)
 
         return imgs_overlay
@@ -243,8 +226,8 @@ if __name__ == "__main__":
         img_overlay,
     )
 
-    # H08 - inhibitors dataset - DAPI, SDC1, ITGA2, LAMC2
-    dir_images = "data/processed/inhibitors/004/004-03"
+    # H08 - pilotscreen dataset - DAPI, SDC1, ITGA2, LAMC2
+    dir_images = "data/processed/pilotscreen/004/004-03"
     df_images = get_metadata(Path(dir_images, "TIF_OVR"))
     # filter for well C11
     df_images = df_images[df_images["well_id"] == "H08"]
@@ -259,9 +242,7 @@ if __name__ == "__main__":
             np.asarray(
                 [
                     io.imread(Path(dir_images, "TIF_OVR", file))
-                    for file in df_images[df_images["channel_id"] == channel][
-                        "file"
-                    ].values
+                    for file in df_images[df_images["channel_id"] == channel]["file"].values
                 ]
             )
         )
@@ -269,9 +250,7 @@ if __name__ == "__main__":
 
     luts = [(1, 99), (30, 95), (92, 99.9), (5, 95)]
     gammas = [1, 0.25, 1, 0.75]
-    img_overlay = get_overlay(
-        imgs[:, 2:, 500:3400, 500:3400].max(axis=1), luts, gammas, four_channel=True
-    )
+    img_overlay = get_overlay(imgs[:, 2:, 500:3400, 500:3400].max(axis=1), luts, gammas, four_channel=True)
     width, height, offset_x, offset_y = (310, 40, 100, 100)
     img_overlay = add_scalebar(
         img_overlay,
@@ -285,15 +264,13 @@ if __name__ == "__main__":
     plt.show()
 
     io.imsave(
-        "data/processed/inhibitors/example_overlays/004-03/H08/overlay_figure_2.png",
+        "data/processed/pilotscreen/example_overlays/004-03/H08/overlay_figure_2.png",
         img_overlay,
     )
     for i in range(30):
         luts = [(0, 99.9), (10, 99), (40, 99.9), (0.1, 99.9)]
         gammas = [1.5, 0.75, 1.5, 1]
-        img_overlay = get_overlay(
-            imgs[:, i, 500:3400, 500:3400], luts, gammas, four_channel=True
-        )
+        img_overlay = get_overlay(imgs[:, i, 500:3400, 500:3400], luts, gammas, four_channel=True)
         width, height, offset_x, offset_y = (310, 40, 100, 100)
         img_overlay = add_scalebar(
             img_overlay,
@@ -306,7 +283,7 @@ if __name__ == "__main__":
         # io.imshow(img_overlay)
         # plt.show()
         io.imsave(
-            f"data/processed/inhibitors/example_overlays/004-03/H08/overlay_figure_2_zslice_{i}.png",
+            f"data/processed/pilotscreen/example_overlays/004-03/H08/overlay_figure_2_zslice_{i}.png",
             img_overlay,
         )
     img_collagen = scale_image(
@@ -323,7 +300,7 @@ if __name__ == "__main__":
         y=img_overlay.shape[0] - offset_y - height,
     )
     io.imsave(
-        "data/processed/inhibitors/example_overlays/004-03/H08/overlay_figure_2_collagen.png",
+        "data/processed/pilotscreen/example_overlays/004-03/H08/overlay_figure_2_collagen.png",
         img_collagen,
     )
 
@@ -352,17 +329,13 @@ if __name__ == "__main__":
                 np.asarray(
                     [
                         io.imread(Path(dir_images, "TIF_OVR", file))
-                        for file in df_images[df_images["channel_id"] == channel][
-                            "file"
-                        ].values
+                        for file in df_images[df_images["channel_id"] == channel]["file"].values
                     ]
                 )
             )
         imgs = np.asarray(imgs)
 
-        img_overlay = get_overlay(
-            imgs[1:, ...].max(axis=1), luts, gammas, four_channel=False
-        )
+        img_overlay = get_overlay(imgs[1:, ...].max(axis=1), luts, gammas, four_channel=False)
         width, height, offset_x, offset_y = (310, 40, 100, 100)
         img_overlay = add_scalebar(
             img_overlay,
@@ -385,12 +358,8 @@ if __name__ == "__main__":
     df_stains = pd.read_csv(
         "/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/metafiles/timecourse_stainings_metadata.csv"
     )
-    df_plate_layout = pd.read_csv(
-        "/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/metafiles/timecourse_layout.csv"
-    )
-    df_plate_layout = df_plate_layout.melt(
-        id_vars=["row"], var_name="col", value_name="staining_set"
-    )
+    df_plate_layout = pd.read_csv("/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/metafiles/timecourse_layout.csv")
+    df_plate_layout = df_plate_layout.melt(id_vars=["row"], var_name="col", value_name="staining_set")
     df_plate_layout["col"] = df_plate_layout["col"].str.zfill(2)
     df_plate_layout["well"] = df_plate_layout["row"] + df_plate_layout["col"]
     df_plate_layout = df_plate_layout.merge(df_stains, on=["staining_set"])

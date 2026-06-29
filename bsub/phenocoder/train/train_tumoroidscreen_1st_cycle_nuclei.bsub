@@ -11,7 +11,7 @@
 
 TMP_DIR=/home/harmelc/scratch/datasets/tumoroidscreen/1st_cycle_nuclei
 mkdir -p $TMP_DIR
-DATA_DIR=/pstore/data/ihb-tumoroidscreen/data/processed/tumoroidscreen/phenocoder/1st_cycle_nuclei
+DATA_DIR=data/tumoroidscreen/phenocoder/1st_cycle_nuclei
 echo "Copying $DATA_DIR to $TMP_DIR"
 rclone copy $DATA_DIR $TMP_DIR
 

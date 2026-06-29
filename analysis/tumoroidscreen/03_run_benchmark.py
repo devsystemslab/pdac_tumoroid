@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser.add_argument("--host", default="client")
     args = parser.parse_args()
     # set paths
-    dir_adata = "/pstore/data/ihb-tumoroidscreen/data/processed/tumoroidscreen/anndata"
+    dir_adata = "data/tumoroidscreen/anndata"
     for cycle in [1, 3]:
         dir_results = Path(dir_adata, "benchmarking", f"cycle_0{cycle}")
         dir_results.mkdir(parents=True, exist_ok=True)

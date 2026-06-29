@@ -12,7 +12,7 @@
 TMP_DIR=/home/harmelc/scratch/datasets/tumoroidscreen/2nd_cycle
 mkdir -p $TMP_DIR
 echo "TMP_DIR: $TMP_DIR"
-DATA_DIR=/pstore/data/ihb-tumoroidscreen/data/processed/tumoroidscreen/phenocoder/2nd_cycle
+DATA_DIR=data/tumoroidscreen/phenocoder/2nd_cycle
 echo "DATA_DIR: $DATA_DIR"
 # copy DATA_DIR to scratch
 echo "Copying $DATA_DIR to $TMP_DIR"

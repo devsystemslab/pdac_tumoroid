@@ -8,7 +8,7 @@ from analysis.utils import (
 )
 
 # set paths
-dir_adata = "data/processed/inhibitors/anndata"
+dir_adata = "data/processed/pilotscreen/anndata"
 file_registered = f"{dir_adata}/mdata_registered.h5mu"
 file_cycle_01 = f"{dir_adata}/mdata_cycle-01.h5mu"
 file_cycle_03 = f"{dir_adata}/mdata_cycle-03.h5mu"
@@ -37,21 +37,13 @@ mdata_org_cycle_01 = mu.read_h5mu(file_org_cycle_01)
 mdata_org_cycle_03 = mu.read_h5mu(file_org_cycle_03)
 
 # segment ducts
-df_chulls_cycle_01, df_chulls_agg_cycle_01 = run_chulls_connected_components(
-    mdata_cycle_01, clusters=["2", "3"]
-)
-df_chulls_cycle_03, df_chulls_agg_cycle_03 = run_chulls_connected_components(
-    mdata_cycle_03, clusters=["4", "3"]
-)
+df_chulls_cycle_01, df_chulls_agg_cycle_01 = run_chulls_connected_components(mdata_cycle_01, clusters=["2", "3"])
+df_chulls_cycle_03, df_chulls_agg_cycle_03 = run_chulls_connected_components(mdata_cycle_03, clusters=["4", "3"])
 
 # update organoid embeddings
 for mod in ["phenocoder", "phenocoder_combined"]:
-    mdata_org_cycle_01 = add_chull_stats_to_mdata_org(
-        mdata_org_cycle_01, df_chulls_agg_cycle_01, mod=mod
-    )
-    mdata_org_cycle_03 = add_chull_stats_to_mdata_org(
-        mdata_org_cycle_03, df_chulls_agg_cycle_03, mod=mod
-    )
+    mdata_org_cycle_01 = add_chull_stats_to_mdata_org(mdata_org_cycle_01, df_chulls_agg_cycle_01, mod=mod)
+    mdata_org_cycle_03 = add_chull_stats_to_mdata_org(mdata_org_cycle_03, df_chulls_agg_cycle_03, mod=mod)
 
 # write mdatas
 mdata_org_cycle_01.write_h5mu(f"{dir_adata}/mdata_org_chull_cycle-01.h5mu")
@@ -60,9 +52,7 @@ mdata_org_cycle_03.write_h5mu(f"{dir_adata}/mdata_org_chull_cycle-03.h5mu")
 # merge organoid embeddings and reruns phenotypic embedding
 adata_dict = {}
 for mod_key in mdata_org_cycle_01.mod_names:
-    mdata_org_combined = merge_org_embeddings(
-        mdata_org_cycle_01, mdata_org_cycle_03, mod=mod_key
-    )
+    mdata_org_combined = merge_org_embeddings(mdata_org_cycle_01, mdata_org_cycle_03, mod=mod_key)
     adata_dict[mod_key] = mdata_org_combined.copy()
 mdata_org_combined = mu.MuData(adata_dict)
 # write mdata
