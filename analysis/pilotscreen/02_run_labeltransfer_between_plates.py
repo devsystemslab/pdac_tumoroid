@@ -160,10 +160,4 @@ for cyc in cycle:
         )
         plt.tight_layout()
         # plt.savefig(f"../timecourse/plots_new/confusion_leiden_vs_projected_cycle{cyc}_{mod}.pdf", bbox_inches="tight")
-            axes[col].set_xticklabels(axes[col].get_xticklabels(), rotation=0, ha="right")
-            axes[col].set_yticklabels(axes[col].get_yticklabels(), rotation=0)
-
-        plt.suptitle(f"leiden vs plate_4_projected (row-normalized) | cycle {cyc} - {mod}", y=1.02)
-        plt.tight_layout()
-        #plt.savefig(f"../timecourse/plots_new/confusion_leiden_vs_projected_cycle{cyc}_{mod}.pdf", bbox_inches="tight")
         plt.show()

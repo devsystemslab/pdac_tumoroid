@@ -19,7 +19,7 @@ if __name__ == "__main__":
     dir_results = Path(dir_adata, "benchmarking")
     dir_results.mkdir(parents=True, exist_ok=True)
 
-    file = f"{dir_adata}/mdata_registered_imputed_mlp_clean.h5mu"
+    file = f"{dir_adata}/mdata_timecourse_sc.h5mu"
     # read mdatas
     mdata = mu.read_h5mu(file)
 

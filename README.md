@@ -18,6 +18,17 @@ The pipeline runs in three stages:
 
 Configuration is YAML-driven (`configs/`), and the heavy compute steps are dispatched to HPC schedulers via job scripts (`bsub/` for LSF, `sbatch/` for Slurm).
 
+## Setup
+
+The full software environment (Python + R/Bioconductor) is frozen in [`environment.yml`](environment.yml):
+
+```bash
+conda env create -f environment.yml   # creates the `pdac_tumoroid` environment
+conda activate pdac_tumoroid
+```
+
+Run scripts from the repository root so the local packages (`analysis`, `phenocoder`, `image_processing`, `benchmarking`, `laminator`) are importable. GPU (CUDA) is required for Cellpose segmentation and CVAE training.
+
 ## Repository layout
 
 | Path | Description |

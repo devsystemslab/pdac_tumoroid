@@ -6,7 +6,7 @@ import pandas as pd
 from skimage import io
 from skimage.exposure import adjust_gamma, rescale_intensity
 
-from analysis.timecourse. import add_scalebar
+from analysis.utils import add_scalebar
 from phenocoder.plot import RGBRotate
 from phenocoder.utils import get_metadata
 
@@ -355,9 +355,7 @@ if __name__ == "__main__":
             )
 
     dir_screen = "data/timecourse"
-    df_stains = pd.read_csv(
-        "metafiles/timecourse_stainings_metadata.csv"
-    )
+    df_stains = pd.read_csv("metafiles/timecourse_stainings_metadata.csv")
     df_plate_layout = pd.read_csv("metafiles/timecourse_layout.csv")
     df_plate_layout = df_plate_layout.melt(id_vars=["row"], var_name="col", value_name="staining_set")
     df_plate_layout["col"] = df_plate_layout["col"].str.zfill(2)

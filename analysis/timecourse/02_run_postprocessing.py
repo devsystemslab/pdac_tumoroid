@@ -9,13 +9,13 @@ from analysis.utils import (
 # set paths
 dir_adata = "data/timecourse/anndata"
 
-file_registered = "data/timecourse/anndata/mdata_registered_imputed_mlp_normalized.h5mu"
+file_registered = "data/timecourse/anndata/mdata_timecourse_sc.h5mu"
 
 # read mdatas
 mdata_reg = mu.read_h5mu(file_registered)
 
 # organoid embeddings
-file_org = "data/timecourse/anndata/mdata_org_mlp_normalized.h5mu"
+file_org = "data/timecourse/anndata/mdata_org.h5mu"
 
 # read mdatas
 mdata_org = mu.read_h5mu(file_org)
@@ -27,9 +27,7 @@ for mod in ["phenocoder_msg_nuclei_imputed", "phenocoder_msg_neighbors_imputed"]
     for cluster in mdata_reg.mod[mod].obs["leiden"].unique():
         print(mod, cluster)
         # segment ducts
-        df_chulls_org, df_chulls_agg_org = run_chulls_connected_components(
-            mdata_reg, clusters=[cluster], mod=mod
-        )
+        df_chulls_org, df_chulls_agg_org = run_chulls_connected_components(mdata_reg, clusters=[cluster], mod=mod)
         chulls_mod_cluster.append(df_chulls_agg_org)
 
 df_all = pd.concat(
@@ -38,9 +36,7 @@ df_all = pd.concat(
 ).reset_index(drop=False)
 
 
-mdata_org = add_chull_stats_to_mdata_org(
-    mdata_org, df_all, mod="msg_imputed_combined", batch_correction=False
-)
+mdata_org = add_chull_stats_to_mdata_org(mdata_org, df_all, mod="msg_imputed_combined", batch_correction=False)
 mdata_org = mu.MuData(mdata_org.mod)
 # write mdatas
 mdata_org.write_h5mu(f"{dir_adata}/mdata_timecourse_org.h5mu")

@@ -21,24 +21,17 @@ if __name__ == "__main__":
 
     print(params)
     # TODO: clean paths
-    stain_metadata = pd.read_csv(
-        "metafiles/timecourse_stainings_metadata.csv"
-    )
+    stain_metadata = pd.read_csv("metafiles/timecourse_stainings_metadata.csv")
     stain_metadata["staining_set"] = stain_metadata["staining_set"].astype(str)
     stains = stain_metadata.stain.unique()
     stain_dict = {
-        set_id: dict(group[["channel", "stain"]].values)
-        for set_id, group in stain_metadata.groupby("staining_set")
+        set_id: dict(group[["channel", "stain"]].values) for set_id, group in stain_metadata.groupby("staining_set")
     }
 
     df_plate_layout = pd.read_csv(Path(params["dir_screen"], "timecourse_layout.csv"))
-    df_plate_layout = df_plate_layout.melt(
-        id_vars=["row"], var_name="col", value_name="staining_set"
-    )
+    df_plate_layout = df_plate_layout.melt(id_vars=["row"], var_name="col", value_name="staining_set")
     df_plate_layout["column"] = df_plate_layout["col"].str.zfill(2)
-    df_plate_layout["row_num"] = df_plate_layout["row"].apply(
-        lambda x: ord(x) - ord("A") + 1
-    )
+    df_plate_layout["row_num"] = df_plate_layout["row"].apply(lambda x: ord(x) - ord("A") + 1)
     df_plate_layout["well_id"] = df_plate_layout["row"] + df_plate_layout["column"]
     df_plate_layout = df_plate_layout.sort_values(by=["well_id"])
 
@@ -46,9 +39,7 @@ if __name__ == "__main__":
     plates = params["plates"]
     df_plates = pd.concat(
         [
-            pd.read_csv(
-                f"{dir_screen}/{plate}/plate_information.csv", dtype={plate: str}
-            ).assign(plate=plate)
+            pd.read_csv(f"{dir_screen}/{plate}/plate_information.csv", dtype={plate: str}).assign(plate=plate)
             for plate in plates
         ]
     )
@@ -113,9 +104,9 @@ if __name__ == "__main__":
         stains=stains,
     )
 
-    mdata_imputed.write_h5mu(Path(dir_results, "mdata_imputed.h5mu"))
+    mdata_imputed.write_h5mu(Path(dir_results, "mdata_timecourse_sc.h5mu"))
 
-    # mdata_imputed = mu.read_h5mu(Path(dir_results, 'mdata_imputed.h5mu'))
+    # mdata_imputed = mu.read_h5mu(Path(dir_results, 'mdata_timecourse_sc.h5mu'))
 
     spatial_dict = run_spatial_feature_processing(mdata_imputed)
 
@@ -130,5 +121,5 @@ if __name__ == "__main__":
         combine_modalities=True,
     )
 
-    mdata_org.write_h5mu(Path(dir_results, f"mdata_org.h5mu"))
+    mdata_org.write_h5mu(Path(dir_results, "mdata_org.h5mu"))
     print("Job completed")

@@ -5,7 +5,7 @@ import pandas as pd
 from skimage import io
 from tqdm import tqdm
 
-from analysis.timecourse.plot_tumoroid_examples import add_scalebar
+from analysis.utils import add_scalebar
 from image_processing.montage import load_well, rgb_overlay
 from image_processing.utils import get_metadata, scale_image
 

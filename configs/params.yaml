@@ -1,36 +1,3 @@
-immune:
-    dir_screen: "data/immune"
-    plates: ["010"]
-    markers:
-        ch_01_neighbors: "DAPI"
-        ch_02_neighbors: "COL1"
-        ch_03_neighbors: "immune"
-        ch_04_neighbors: "CK19"
-        ch_01_nuclei: "DAPI"
-        ch_02_nuclei: "COL1"
-        ch_03_nuclei: "immune"
-        ch_04_nuclei: "CK19"
-    registered: false
-    input_type: TIF_OVR_BG
-    phenocoder:
-        dir_models: "data/immune/phenocoder"
-        models:
-            source:
-                cycle: "01"
-                file: "1st_cycle_nuclei/models/cond_latent_32_dense_64_dropout_0.25_beta_0.01_20241029-151845"
-        n_comps_pca:
-            nuclei: 6
-            nuclei_msg: 4
-            phenocoder: 32
-            phenocoder_msg: 32
-            org_embedding: 32
-        cluster_res:
-            nuclei: 0.2
-            nuclei_msg: 0.2
-            phenocoder: 0.5
-            phenocoder_msg: 0.5
-            org_embedding: 0.5
-
 pilotscreen:
     dir_screen: "data/pilotscreen"
     registered: true
@@ -66,6 +33,39 @@ pilotscreen:
             target:
                 cycle: "03"
                 file: "2nd_cycle_nuclei/models/cond_latent_32_dense_64_dropout_0.25_beta_0.01_20241029-230904"
+        n_comps_pca:
+            nuclei: 6
+            nuclei_msg: 4
+            phenocoder: 32
+            phenocoder_msg: 32
+            org_embedding: 32
+        cluster_res:
+            nuclei: 0.2
+            nuclei_msg: 0.2
+            phenocoder: 0.5
+            phenocoder_msg: 0.5
+            org_embedding: 0.5
+
+multiple_patients:
+    dir_screen: "data/multiple_patients"
+    plates: ["008", "009"]
+    markers:
+        ch_01_neighbors: "DAPI"
+        ch_02_neighbors: "COL1"
+        ch_03_neighbors: "p-ERK"
+        ch_04_neighbors: "EGFR"
+        ch_01_nuclei: "DAPI"
+        ch_02_nuclei: "COL1"
+        ch_03_nuclei: "p-ERK"
+        ch_04_nuclei: "EGFR"
+    registered: false
+    input_type: TIF_OVR_BG
+    phenocoder:
+        dir_models: "data/multiple_patients/phenocoder"
+        models:
+            source:
+                cycle: "01"
+                file: "1st_cycle_nuclei/models/cond_latent_32_dense_64_dropout_0.25_beta_0.01_20241105-191430"
         n_comps_pca:
             nuclei: 6
             nuclei_msg: 4

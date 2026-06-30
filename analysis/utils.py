@@ -13,9 +13,26 @@ import seaborn as sns
 from matplotlib.colors import ListedColormap
 from PIL import Image
 from scipy.cluster import hierarchy as sch
+from skimage.util import dtype_limits
 from tqdm import tqdm
 
 from phenocoder.spatial import get_chulls_connected_components
+
+
+def add_scalebar(img: np.ndarray, width: int, height: int, x: int, y: int) -> np.ndarray:
+    """
+    Add a scale bar (filled rectangle) to an RGB image.
+    :param img:
+    :param width:
+    :param height:
+    :param x:
+    :param y:
+    :return:
+    """
+    img = img.copy()
+    max_val = dtype_limits(img)[1]
+    img[y : y + height, x : x + width, :] = max_val
+    return img
 
 
 def order_genes(adata, preselected_genes=None):

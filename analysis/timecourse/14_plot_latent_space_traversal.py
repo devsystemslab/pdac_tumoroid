@@ -443,7 +443,7 @@ dir_screen = params["dir_screen"]
 dir_results = Path(params["dir_screen"], "anndata")
 plates = params["plates"]
 
-mdata = mu.read_h5mu(Path(dir_results, "mdata_registered_imputed_mlp_normalized.h5mu"))
+mdata = mu.read_h5mu(Path(dir_results, "mdata_timecourse_sc.h5mu"))
 
 df_plates = pd.concat(
     [

@@ -7,13 +7,13 @@ import pandas as pd
 import scanpy as sc
 import skimage
 import yaml
-from analysis.pilotscreen.generate_example_images import (
+from analysis.utils import (
+    add_scalebar,
     order_genes,
     plot_dotplot,
     plot_organoid,
     plot_umap,
 )
-from analysis.timecourse.correct_examples import add_scalebar
 from matplotlib import cm
 from skimage import io
 
@@ -39,7 +39,7 @@ for c in cycles:
     mdata_orig = mu.read_h5mu(Path(dir_results, f"mdata_cycle-{c}.h5mu"))
     plate_horizontal = []
     for plate in plates:
-        print(m)
+        print(plate)
         img_1 = plot_organoid(
             f"J08_{plate}",
             mdata_orig["phenocoder"],
@@ -77,7 +77,7 @@ mods_vertical = []
 for c in cycles:
     plate_horizontal = []
     for plate in plates:
-        print(m)
+        print(plate)
         img_1 = plot_organoid(
             f"J08_{plate}",
             mdata_projected[c],

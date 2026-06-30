@@ -348,8 +348,5 @@ def compute_avg_cas(
                 seed=seed,
             )
         )
-            latent_key=latent_key,
-            n_neighbors=n_neighbors,
-            seed=seed))
     avg_cas = np.mean(cas_list)
     return avg_cas

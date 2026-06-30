@@ -15,7 +15,7 @@ setwd(
 
 message("Loading data...")
 
-file <- "data/timecourse/anndata/mdata_org_chull_mlp_normalized.h5mu"
+file <- "data/timecourse/anndata/mdata_timecourse_org.h5mu"
 mdata <- read_mdata(file)
 
 df <- mdata["msg_imputed_combined"]$obs |>

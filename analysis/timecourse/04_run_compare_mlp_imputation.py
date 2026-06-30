@@ -12,19 +12,17 @@ from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.preprocessing import StandardScaler
 from torch.utils.data import DataLoader
 
+from analysis.timecourse.mlp_imputation import plot_summary
 from analysis.timecourse.mlp_training import (
     ConditionalMarkerMLP,
     MarkerDataset,
     data_setup,
     get_train_val_test_indices,
 )
-from analysis.timecourse.plot_mlp_imputation import plot_summary
 from phenocoder.utils import load_plate
 
 
-def fit_linear_baseline(
-    embeddings, marker_ids, intensities, train_idx, val_idx, marker_names
-):
+def fit_linear_baseline(embeddings, marker_ids, intensities, train_idx, val_idx, marker_names):
     num_markers = len(marker_names)
     one_hot = np.zeros((len(embeddings), num_markers))
     one_hot[np.arange(len(embeddings)), marker_ids] = 1.0
@@ -40,9 +38,7 @@ def fit_linear_baseline(
     return model, scaler
 
 
-def evaluate_linear_baseline(
-    model, scaler, embeddings, marker_ids, intensities, test_idx, marker_names
-):
+def evaluate_linear_baseline(model, scaler, embeddings, marker_ids, intensities, test_idx, marker_names):
     num_markers = len(marker_names)
     one_hot = np.zeros((len(embeddings), num_markers))
     one_hot[np.arange(len(embeddings)), marker_ids] = 1.0
@@ -127,14 +123,11 @@ if __name__ == "__main__":
     screen = "timecourse"
     file = "configs/params.yaml"
 
-    stain_metadata = pd.read_csv(
-        "metafiles/timecourse_stainings_metadata.csv"
-    )
+    stain_metadata = pd.read_csv("metafiles/timecourse_stainings_metadata.csv")
     stain_metadata["staining_set"] = stain_metadata["staining_set"].astype(str)
     stains = stain_metadata.stain.unique()
     stain_dict = {
-        set_id: dict(group[["channel", "stain"]].values)
-        for set_id, group in stain_metadata.groupby("staining_set")
+        set_id: dict(group[["channel", "stain"]].values) for set_id, group in stain_metadata.groupby("staining_set")
     }
 
     with open(file) as f:
@@ -145,9 +138,7 @@ if __name__ == "__main__":
     mlp_dir = Path(params["dir_screen"], "mlp_imputation")
 
     df_plate_layout = pd.read_csv(Path(params["dir_screen"], "timecourse_layout.csv"))
-    df_plate_layout = df_plate_layout.melt(
-        id_vars=["row"], var_name="col", value_name="staining_set"
-    )
+    df_plate_layout = df_plate_layout.melt(id_vars=["row"], var_name="col", value_name="staining_set")
     df_plate_layout["column"] = df_plate_layout["col"].str.zfill(2)
     df_plate_layout["well_id"] = df_plate_layout["row"] + df_plate_layout["column"]
 
@@ -155,9 +146,7 @@ if __name__ == "__main__":
     plates = params["plates"]
     df_plates = pd.concat(
         [
-            pd.read_csv(
-                f"{dir_screen}/{plate}/plate_information.csv", dtype={plate: str}
-            ).assign(plate=plate)
+            pd.read_csv(f"{dir_screen}/{plate}/plate_information.csv", dtype={plate: str}).assign(plate=plate)
             for plate in plates
         ]
     )
@@ -181,13 +170,7 @@ if __name__ == "__main__":
         )
         df_plates.append(df_plate)
     df_plates = pd.concat(df_plates)
-    df_plates["label"] = (
-        df_plates["label"].astype(str)
-        + "_"
-        + df_plates["well"]
-        + "_"
-        + df_plates["plate"]
-    )
+    df_plates["label"] = df_plates["label"].astype(str) + "_" + df_plates["well"] + "_" + df_plates["plate"]
 
     # load phenocoder data with image patch embedding PCA space
     mdata = mu.read_h5mu(Path(dir_results, "mdata_registered.h5mu"))
@@ -209,9 +192,7 @@ if __name__ == "__main__":
         adata = mdata[mod].copy()
 
         print(imp, w)
-        embeddings, marker_ids, intensities, _ = data_setup(
-            adata, df_stain_layout, df_plates, imp, stain_dict
-        )
+        embeddings, marker_ids, intensities, _ = data_setup(adata, df_stain_layout, df_plates, imp, stain_dict)
 
         DAPI_DIM = embeddings.shape[1]
         NUM_MARKERS = len(stains)
@@ -229,9 +210,7 @@ if __name__ == "__main__":
         model.eval()
 
         # --- Ridge ---
-        lin_model, scaler = fit_linear_baseline(
-            embeddings, marker_ids, intensities, train_idx, val_idx, stains
-        )
+        lin_model, scaler = fit_linear_baseline(embeddings, marker_ids, intensities, train_idx, val_idx, stains)
 
         # --- split test into groups ---
         test_idx_shuffled = test_idx.copy()
@@ -243,9 +222,7 @@ if __name__ == "__main__":
 
         for group in groups:
             # MLP
-            test_ds = MarkerDataset(
-                embeddings[group], marker_ids[group], intensities[group]
-            )
+            test_ds = MarkerDataset(embeddings[group], marker_ids[group], intensities[group])
             test_loader = DataLoader(test_ds, batch_size=256, shuffle=False)
             df = evaluate(model, test_loader, stains)
             metric_df = compute_metrics(df, stains)
@@ -284,9 +261,7 @@ if __name__ == "__main__":
             ).reset_index(drop=True)
 
         mlp_metrics[f"{imp}_{mod}"] = pd.concat(mlp_group_metrics).reset_index()
-        baseline_metrics[f"{imp}_{mod}"] = pd.concat(
-            baseline_group_metrics
-        ).reset_index()
+        baseline_metrics[f"{imp}_{mod}"] = pd.concat(baseline_group_metrics).reset_index()
         nn_metrics[f"{imp}_{mod}"] = nn_imp_cv_melt.reset_index()
 
     melt_stack = []

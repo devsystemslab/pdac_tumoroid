@@ -345,7 +345,7 @@ if __name__ == "__main__":
     )
 
     mdata = mu.read_h5mu(
-        "data/timecourse/anndata/mdata_registered_imputed_mlp_normalized.h5mu"
+        "data/timecourse/anndata/mdata_timecourse_sc.h5mu"
     )
 
     dir_plots = "analysis/timecourse/plots"

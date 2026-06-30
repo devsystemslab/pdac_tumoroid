@@ -22,6 +22,8 @@ def preprocess_point_cloud(pcd, voxel_size):
     :return:
     """
     pcd_down = pcd.voxel_down_sample(voxel_size)
+    radius_normal = voxel_size * 2
+    pcd_down.estimate_normals(
         o3d.geometry.KDTreeSearchParamHybrid(radius=radius_normal, max_nn=30)
     )
     radius_feature = voxel_size * 5
@@ -428,8 +430,6 @@ def process_plate(
         plot=False,
     )
     futures = client.map(process_well_partial, df_iter["well_id"].to_list(), pure=False)
-                                   plot=False)
-    futures = client.map(process_well_partial, df_iter['well_id'].to_list(), pure=False)
     for future, result in as_completed(futures, with_results=True):
         processed_files.extend(result)
 
