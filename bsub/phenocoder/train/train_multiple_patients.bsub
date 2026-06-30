@@ -9,7 +9,7 @@
 #BSUB -e logs/train_phenocoder_multiple_patients_1st_cycle_nuclei-%J.err                   # Error file
 #BSUB -R "rusage[mem=200GB/host]"        # Memory requirement
 
-TMP_DIR=/home/harmelc/scratch/datasets/multiple_patients/1st_cycle_nuclei
+TMP_DIR=scratch/datasets/multiple_patients/1st_cycle_nuclei
 mkdir -p $TMP_DIR
 DATA_DIR=data/multiple_patients/phenocoder/1st_cycle_nuclei
 echo "Copying $DATA_DIR to $TMP_DIR"

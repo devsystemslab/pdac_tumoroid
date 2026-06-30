@@ -1,0 +1,55 @@
+screen: multiple_patients
+dir_output: data/processed
+metadata: metafiles/imaging_data_overview.csv
+plate_layout: metafiles/plate_layout_dummy.csv
+remove_first_tile: true
+overlap: 0.1
+overwrite_existing: false
+clean_up: false
+wells:
+preprocessing:
+  run: false
+  illuminaton_correction: true
+  chunk_size: 150
+  max_iter: 250
+  remove_first_tile: true
+background_correction:
+  run: false
+  mode: basicpy
+  multiplicative:
+    007-01:
+      - '04'
+    008-01:
+      - '04'
+    009-01:
+      - '04'
+  median_filter:
+    007-01:
+      - '04'
+    008-01:
+      - '04'
+    009-01:
+      - '04'
+mip:
+  run: false
+  input:
+  - TIF_OVR
+  - TIF_OVR_BG
+montage:
+  run: false
+  input:
+  - TIF_MIP_OVR
+  - TIF_MIP_OVR_BG
+segmentation:
+  run: false
+  input:
+  - TIF_OVR_BG
+feature_extraction:
+  run: true
+  input:
+  - TIF_OVR
+  - TIF_OVR_BG
+  segmentation_input: SEG_TIF_OVR_BG
+registration:
+  run: false
+

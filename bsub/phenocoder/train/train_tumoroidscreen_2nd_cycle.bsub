@@ -9,7 +9,7 @@
 #BSUB -e logs/train_phenocoder_tumoroidscreen_2nd_cycle_nuclei-%J.err                   # Error file
 #BSUB -R "rusage[mem=100GB/host]"        # Memory requirement
 
-TMP_DIR=/home/harmelc/scratch/datasets/tumoroidscreen/2nd_cycle_nuclei
+TMP_DIR=scratch/datasets/tumoroidscreen/2nd_cycle_nuclei
 mkdir -p $TMP_DIR
 DATA_DIR=data/tumoroidscreen/phenocoder/2nd_cycle_nuclei
 echo "Copying $DATA_DIR to $TMP_DIR"

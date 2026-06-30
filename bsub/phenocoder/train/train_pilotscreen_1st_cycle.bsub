@@ -9,7 +9,7 @@
 #BSUB -e train_phenocoder_pilotscreen_1st_cycle_nuclei-%J.err                   # Error file
 #BSUB -R "rusage[mem=100GB/host]"        # Memory requirement
 
-TMP_DIR=/home/harmelc/scratch/datasets/pilotscreen/1st_cycle_nuclei
+TMP_DIR=scratch/datasets/pilotscreen/1st_cycle_nuclei
 mkdir -p $TMP_DIR
 echo "TMP_DIR: $TMP_DIR"
 DATA_DIR=data/pilotscreen/phenocoder/1st_cycle_nuclei
