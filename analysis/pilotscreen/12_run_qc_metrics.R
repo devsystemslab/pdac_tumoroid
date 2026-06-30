@@ -4,10 +4,10 @@ library(patchwork)
 library(ggrepel)
 
 source(
-  "/pstore/home/harmelc/tumoroid_screen/whole_mount_tumoroid/analysis/pilotscreen/utils.R"
+  "analysis/pilotscreen/utils.R"
 )
 setwd(
-  "/pstore/home/harmelc/tumoroid_screen/whole_mount_tumoroid/analysis/pilotscreen/plots"
+  "analysis/pilotscreen/plots"
 )
 
 # =============================================================================

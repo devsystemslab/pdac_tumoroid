@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# Publication figure: Multi-patient EGFR drug screen (reduced)
+# Publication figure: Multi-patient drug screen (reduced)
 # =============================================================================
 # Produces:
 #   A) PCA embeddings of phenotypic features (cancer, CAF, drug)
@@ -20,7 +20,7 @@ library(pheatmap)
 library(grid)
 library(gridExtra)
 
-source("/pstore/home/harmelc/tumoroid_screen/whole_mount_tumoroid/analysis/egfr/utils.R")
+source("analysis/multiple_patients/utils.R")
 
 # =============================================================================
 # 1. DATA LOADING
@@ -28,9 +28,9 @@ source("/pstore/home/harmelc/tumoroid_screen/whole_mount_tumoroid/analysis/egfr/
 
 message("Loading data...")
 
-file <- "/pstore/data/ihb-tumoroid/data/processed/egfr/anndata/mdata_subset.h5mu"
+file <- "data/multiple_patients/anndata/mdata_subset.h5mu"
 mdata <- read_mdata(file)
-setwd("/pstore/home/harmelc/tumoroid_screen/whole_mount_tumoroid/analysis/egfr/plots")
+setwd("analysis/multiple_patients/plots")
 
 X <- mdata["phenocoder_combined"]$X |> as.matrix()
 # remove duplicate columns which can have different column names but identical values
@@ -322,7 +322,7 @@ composite <- (
     theme = theme(plot.tag = element_text(size = 14, face = "bold"))
   )
 
-ggsave("figure_multipatient_egfr.pdf",
+ggsave("figure_multipatient.pdf",
   plot = composite,
   width = 360, height = 400, units = "mm", limitsize = FALSE
 )

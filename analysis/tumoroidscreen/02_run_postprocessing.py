@@ -11,7 +11,7 @@ from analysis.utils import (
 )
 
 screen = "tumoroidscreen"
-file = "whole_mount_tumoroid/configs/params.yaml"
+file = "configs/params.yaml"
 with open(file) as f:
     params = yaml.load(f, Loader=yaml.FullLoader)
     params = params[screen]

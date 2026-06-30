@@ -6,14 +6,14 @@ import yaml
 
 from analysis.utils import run_umap_gpu
 
-screen = "egfr"
-file = "/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/configs/params.yaml"
+screen = "multiple_patients"
+file = "configs/params.yaml"
 with open(file) as f:
     params = yaml.load(f, Loader=yaml.FullLoader)
     params = params[screen]
 
 # read in mutation data
-df = pd.read_csv("/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/metafiles/organoid_mutation.tsv", sep="\t")
+df = pd.read_csv("metafiles/organoid_mutation.tsv", sep="\t")
 # transpose
 df = df.set_index("mut").T
 # rename index to patient_id and reset index

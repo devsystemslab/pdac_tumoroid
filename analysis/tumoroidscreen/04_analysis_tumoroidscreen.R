@@ -1,5 +1,5 @@
 # source utils
-source('whole_mount_tumoroid/analysis/pilotscreen/utils.R')
+source('analysis/pilotscreen/utils.R')
 # load libraries
 library(ggridges)
 library(RColorBrewer)
@@ -11,8 +11,8 @@ library(ggrepel)
 dir_screen <- 'data/processed/tumoroidscreen'
 dir_adata <- str_c(dir_screen, 'anndata', sep='/')
 dir_plots <- str_c(dir_screen, 'plots', sep='/')
-dir_analysis <- 'whole_mount_tumoroid/analysis/tumoroidscreen'
-dir_metafiles <- 'whole_mount_tumoroid/metafiles'
+dir_analysis <- 'analysis/tumoroidscreen'
+dir_metafiles <- 'metafiles'
 
 # read mdata
 mdata_org <- read_mdata(str_c(dir_adata, 'mdata_org_combined.h5mu', sep = '/'))

@@ -5,15 +5,15 @@ import pandas as pd
 import scanpy as sc
 import yaml
 
-screen = "egfr"
-file = "/pstore/home/harmelc/tumoroid_screen/whole_mount_tumoroid/configs/params.yaml"
+screen = "multiple_patients"
+file = "configs/params.yaml"
 with open(file) as f:
     params = yaml.load(f, Loader=yaml.FullLoader)
     params = params[screen]
 
 # read in mutation data
 df = pd.read_csv(
-    "/pstore/home/harmelc/tumoroid_screen/whole_mount_tumoroid/metafiles/organoid_mutation.tsv",
+    "metafiles/organoid_mutation.tsv",
     sep="\t",
 )
 # transpose

@@ -17,15 +17,15 @@ def generate_plate_layout(dir_screen: str, dir_metafiles: str):
     :return:
     """
     # add meta information
-    df_caf_lookup = pd.read_csv(Path(dir_metafiles, "egfr_tidy_patient_caf_lookup.csv"), dtype={"plate": str})
-    df_patient_meta = pd.read_csv(Path(dir_metafiles, "egfr_tidy_patient_meta.csv")).rename(
+    df_caf_lookup = pd.read_csv(Path(dir_metafiles, "multiple_patients_tidy_patient_caf_lookup.csv"), dtype={"plate": str})
+    df_patient_meta = pd.read_csv(Path(dir_metafiles, "multiple_patients_tidy_patient_meta.csv")).rename(
         columns={"patient": "cancer"}
     )
     # all to string
     df_patient_meta.loc[:, df_patient_meta.dtypes == "int64"] = df_patient_meta.loc[
         :, df_patient_meta.dtypes == "int64"
     ].astype(str)
-    df_drugs = pd.read_csv(Path(dir_metafiles, "egfr_tidy_platelayout_drugs_wide.csv"))
+    df_drugs = pd.read_csv(Path(dir_metafiles, "multiple_patients_tidy_platelayout_drugs_wide.csv"))
     # pivot long index = row
     df_drugs = df_drugs.melt(id_vars="row", var_name="col", value_name="drug")
     # add convert col into double digits style
@@ -33,7 +33,7 @@ def generate_plate_layout(dir_screen: str, dir_metafiles: str):
         well=lambda x: x["row"] + x["col"]
     )
 
-    df_patient_caf = pd.read_csv(Path(dir_metafiles, "egfr_tidy_platelayout_patient_caf_wide.csv"))
+    df_patient_caf = pd.read_csv(Path(dir_metafiles, "multiple_patients_tidy_platelayout_patient_caf_wide.csv"))
     df_patient_caf = df_patient_caf.melt(id_vars="row", var_name="col", value_name="cancer_x_caf")
     df_patient_caf = df_patient_caf.assign(col=df_patient_caf["col"].apply(lambda x: f"{int(x):02d}")).assign(
         well=lambda x: x["row"] + x["col"]
@@ -48,15 +48,15 @@ def generate_plate_layout(dir_screen: str, dir_metafiles: str):
 
 
 if __name__ == "__main__":
-    screen = "egfr"
-    file = "/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/configs/params.yaml"
+    screen = "multiple_patients"
+    file = "configs/params.yaml"
     with open(file) as f:
         params = yaml.load(f, Loader=yaml.FullLoader)
         params = params[screen]
 
     generate_plate_layout(
         dir_screen=params["dir_screen"],
-        dir_metafiles="/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/metafiles",
+        dir_metafiles="metafiles",
     )
     df_plate_layouts = pd.read_csv(
         Path(params["dir_screen"], "plate_layout.csv"),

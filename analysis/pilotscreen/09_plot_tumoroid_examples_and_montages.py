@@ -1,227 +1,20 @@
-import io as io_builtin
 import os
 
 import anndata as ad
-import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import muon as mu
 import numpy as np
 import pandas as pd
 import scanpy as sc
-import seaborn as sns
 import yaml
-from matplotlib.colors import ListedColormap
-from PIL import Image
-from scipy.cluster import hierarchy as sch
 from skimage import io
 from tqdm import tqdm
 
+from analysis.utils import add_black_border, plot_dotplot, plot_organoid, plot_umap
 from phenocoder.plot import generate_examples
 
 plt.rc("pdf", fonttype=42)
 sc._settings.settings._vector_friendly = True
-
-
-def order_genes(adata, preselected_genes=None):
-    if preselected_genes is not None:
-        adata = adata[:, preselected_genes]
-    Z = sch.linkage(adata.X.T, method="ward")
-    dendrogram = sch.dendrogram(Z, no_plot=True)
-    ordered_genes = [adata.var_names[i] for i in dendrogram["leaves"]]
-    return ordered_genes
-
-
-def plot_dotplot(adata, cycle, dir_screen, remove_cluster: list = None):
-    sc.set_figure_params(figsize=(20, 20))
-    sc.settings.figdir = f"{dir_screen}/plots"
-    if remove_cluster is not None:
-        adata = adata[~adata.obs["leiden_phenocoder"].isin(remove_cluster)]
-    dp = sc.pl.dotplot(
-        adata,
-        var_names=order_genes(adata),
-        groupby="leiden_phenocoder",
-        dendrogram=True,
-        return_fig=True,
-    )
-    dp.add_totals(color="grey").style(dot_edge_color="black", dot_edge_lw=0.5, cmap="Greys", dot_max=0.5, dot_min=0.1)
-    dp.savefig(f"{dir_screen}/plots/dotplot_cycle_{cycle}.pdf")
-    plt.close("all")
-
-
-def plot_umap(adata, cycle, dir_screen, size=10, color="leiden"):
-    n_colors = adata.obs[color].nunique()
-    tab20 = sns.color_palette("tab20", n_colors=n_colors)
-    adata.uns["leiden_colors"] = [f"#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}" for r, g, b in tab20]
-    sc._settings.settings._vector_friendly = True
-    fig = sc.pl.umap(adata, color=color, return_fig=True, show=False, s=size)
-    plt.savefig(f"{dir_screen}/plots/umap_leiden_cycle_{cycle}.pdf", format="pdf", dpi=300)
-    plt.close("all")
-
-
-def plot_paga(adata):
-    n_colors = adata.obs["leiden"].nunique()
-    tab20 = sns.color_palette("tab20", n_colors=n_colors)
-    adata.uns["leiden_colors"] = [f"#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}" for r, g, b in tab20]
-    sc.tl.paga(adata, groups="leiden")
-    sc.pl.paga(adata, color="leiden", node_size_scale=10, edge_width_scale=2)
-
-
-def add_black_border(img, width):
-    """
-    Add black border to image
-    :param img:
-    :param width:
-    :return:
-    """
-    return np.pad(
-        img,
-        ((width, width), (width, width), (0, 0)),
-        mode="constant",
-        constant_values=0,
-    )
-
-
-def plot_organoid(
-    id,
-    adata,
-    project_3d=False,
-    edgecolors=None,
-    add_legend=False,
-    cut_open=False,
-    bg_color="black",
-    legend_color="white",
-    leiden_colors=None,
-):
-    """
-    Plot organoid
-    :param id:
-    :param adata:
-    :param project_3d:
-    :param edgecolors:
-    :param add_legend:
-    :return:
-    """
-    cmap = ListedColormap(sns.color_palette("tab20", n_colors=adata.obs["leiden"].nunique()))
-    # specify color look up per leiden and add to adata.obs using cmap
-    if "id" not in adata.obs.columns:
-        adata.obs["id"] = adata.obs["well_id"].astype(str) + "_" + adata.obs["plate_id"].astype(str)
-
-    adata = adata[adata.obs["id"] == id]
-    if cut_open:
-        center_centroid_0 = 3814 / 2
-        center_centroid_1 = 3814 / 2
-        adata = adata[~((adata.obs["centroid-0"] < center_centroid_0) & (adata.obs["centroid-1"] > center_centroid_1))]
-    np.random.seed(0)
-    random_indices = np.random.permutation(list(range(adata.shape[0])))
-    adata = adata[random_indices, :]
-    if leiden_colors is None:
-        list_colors = [cmap.colors[i] for i in adata.obs["leiden"].astype(int)]
-    else:
-        list_colors = [leiden_colors[i] for i in adata.obs["leiden"].astype(int)]
-    x_lim, y_lim = (0, 3814), (0, 3814)
-    fig = plt.figure(figsize=(5, 5))
-    # set background to black
-    fig.patch.set_facecolor(bg_color)
-    if project_3d:
-        ax = fig.add_subplot(1, 1, 1, projection="3d")
-        ax.set_aspect("equal", "box")
-        ax.scatter(
-            adata.obs["centroid-1"],
-            adata.obs["centroid-0"],
-            adata.obs["z"],
-            c=list_colors,
-            s=20,
-            alpha=0.75,
-            edgecolors=edgecolors,
-            linewidths=0.5,
-        )
-        # no axis labels
-        ax.axes.get_xaxis().set_ticklabels([])
-        ax.axes.get_yaxis().set_ticklabels([])
-        ax.axes.get_zaxis().set_ticklabels([])
-        ax.set_xlim(xmin=x_lim[0], xmax=x_lim[1])
-        ax.set_ylim(ymin=y_lim[0], ymax=y_lim[1])
-        ax.set_facecolor(bg_color)
-        if cut_open:
-            # add line on x-y plane which show the cut off quadrant:
-            ax.plot(
-                [center_centroid_1, center_centroid_1],
-                [0, 3814],
-                color="black",
-                linestyle="--",
-                linewidth=1,
-            )
-            ax.plot(
-                [0, 3814],
-                [center_centroid_0, center_centroid_0],
-                color="black",
-                linestyle="--",
-                linewidth=1,
-            )
-            # center y vertical line into z direction
-            ax.plot(
-                [center_centroid_1, center_centroid_1],
-                [center_centroid_0, center_centroid_0],
-                [0, adata.obs["z"].max()],
-                color="black",
-                linestyle="--",
-                linewidth=1,
-                zorder=10,
-            )
-    else:
-        ax = fig.add_subplot(1, 1, 1)
-        ax.set_aspect("equal", "box")
-        ax.scatter(
-            adata.obs["centroid-1"],
-            adata.obs["centroid-0"],
-            c=list_colors,
-            s=20,
-            edgecolors=edgecolors,
-            linewidths=0.5,
-        )
-        # set axis limits
-        ax.set_xlim(xmin=x_lim[0], xmax=x_lim[1])
-        ax.set_ylim(ymin=y_lim[0], ymax=y_lim[1])
-        # reverse y-axis
-        ax.yaxis.set_inverted(True)
-        # no axis labels
-        ax.axes.get_xaxis().set_ticklabels([])
-        ax.axes.get_yaxis().set_ticklabels([])
-        # no axis ticks
-        ax.axes.get_xaxis().set_ticks([])
-        ax.axes.get_yaxis().set_ticks([])
-        # no frame
-        ax.spines["top"].set_visible(False)
-        ax.spines["right"].set_visible(False)
-        ax.spines["bottom"].set_visible(False)
-        ax.spines["left"].set_visible(False)
-        # black background
-        ax.set_facecolor(bg_color)
-    if add_legend:
-        handles = [
-            mpatches.Patch(color=cmap.colors[i], label=f"Cluster {i}") for i in range(adata.obs["leiden"].nunique())
-        ]
-        ax.legend(
-            handles=handles,
-            loc="upper right",
-            bbox_to_anchor=(1, 1),
-            facecolor=legend_color,
-            edgecolor=legend_color,
-        )
-    # tight layout
-    plt.tight_layout()
-    # reduce white margin around plot
-    plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-    fig.canvas.draw()
-    # Convert the canvas to a raw RGB buffer
-    # Create a bytes buffer to save the plot
-    buf = io_builtin.BytesIO()
-    plt.savefig(buf, format="png")
-    buf.seek(0)
-    # Open the PNG image from the buffer and convert it to a NumPy array
-    image = np.array(Image.open(buf))
-    plt.close(fig)
-    return image
 
 
 def read_image(file, shape=(477, 477, 3)):
@@ -328,7 +121,7 @@ def generate_condition_montages(
 if __name__ == "__main__":
     # load params yaml
     screen = "pilotscreen"
-    file = "whole_mount_tumoroid/configs/params.yaml"
+    file = "configs/params.yaml"
     with open(file) as f:
         params = yaml.load(f, Loader=yaml.FullLoader)
         params = params[screen]
@@ -411,7 +204,7 @@ if __name__ == "__main__":
     )
 
     # example anndata
-    file_examples = "whole_mount_tumoroid/metafiles/positive_ctrls_examples_pilotscreen.csv"
+    file_examples = "metafiles/positive_ctrls_examples_pilotscreen.csv"
     adata_org_example = mdata_org["phenocoder_combined"].copy()
     df_examples = pd.read_csv(file_examples, dtype={"well_id": str, "plate_id": str})
     df_examples["id"] = df_examples["well_id"] + "_" + df_examples["plate_id"]

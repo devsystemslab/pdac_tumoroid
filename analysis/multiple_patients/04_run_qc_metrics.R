@@ -4,10 +4,10 @@ library(patchwork)
 library(ggrepel)
 
 source(
-  "/pstore/home/harmelc/tumoroid_screen/whole_mount_tumoroid/analysis/egfr/utils.R"
+  "analysis/multiple_patients/utils.R"
 )
 setwd(
-  "/pstore/home/harmelc/tumoroid_screen/whole_mount_tumoroid/analysis/egfr/plots"
+  "analysis/multiple_patients/plots"
 )
 # =============================================================================
 # 1. DATA LOADING
@@ -15,7 +15,7 @@ setwd(
 
 message("Loading data...")
 
-file <- "/pstore/data/ihb-tumoroid/data/processed/egfr/anndata/mdata_subset.h5mu"
+file <- "data/multiple_patients/anndata/mdata_subset.h5mu"
 mdata <- read_mdata(file)
 
 df <- mdata["phenocoder_combined"]$obs |>

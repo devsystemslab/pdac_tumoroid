@@ -9,4 +9,4 @@
 #BSUB -e logs/phenocode_tumoroidscreen_2-%J.err                   # Error file
 #BSUB -R "rusage[mem=100GB/host]"
 
-python /pstore/home/harmelc/tumoroid/whole_mount_tumoroid/analysis/tumoroidscreen_2/run_phenocoder.py
+python analysis/tumoroidscreen_2/run_phenocoder.py

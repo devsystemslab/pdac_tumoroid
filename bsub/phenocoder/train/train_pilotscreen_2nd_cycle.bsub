@@ -1,0 +1,50 @@
+#!/bin/bash
+#BSUB -J train_phenocoder_pilotscreen_2nd_cycle_nuclei # Job name
+#BSUB -n 2                               # number of tasks
+#BSUB -R "span[hosts=1]"                 # Allocate all tasks in 1 host
+#BSUB -q long                        # Select queue
+#BSUB -W 300:00                          # walltime
+#BSUB -gpu "num=1:j_exclusive=yes"       # Request 1 GPU exclusive for the job
+#BSUB -o train_phenocoder_pilotscreen_2nd_cycle_nuclei-%J.out                   # Output file
+#BSUB -e train_phenocoder_pilotscreen_2nd_cycle_nuclei-%J.err                   # Error file
+#BSUB -R "rusage[mem=100GB/host]"        # Memory requirement
+
+TMP_DIR=/home/harmelc/scratch/datasets/pilotscreen/2nd_cycle_nuclei
+mkdir -p $TMP_DIR
+echo "TMP_DIR: $TMP_DIR"
+DATA_DIR=data/pilotscreen/phenocoder/2nd_cycle_nuclei
+echo "DATA_DIR: $DATA_DIR"
+# copy DATA_DIR to scratch
+echo "Copying $DATA_DIR to $TMP_DIR"
+rclone copy $DATA_DIR $TMP_DIR
+# beta 0.01
+echo "Training with beta 0.01..."
+python phenocoder/train.py $TMP_DIR --n_dense_dim 32 --n_latent_dim 16 --conditional --n_workers 2 --beta 0.01
+python phenocoder/train.py $TMP_DIR --n_dense_dim 64 --n_latent_dim 32 --conditional --n_workers 2 --beta 0.01
+python phenocoder/train.py $TMP_DIR --n_dense_dim 128 --n_latent_dim 64 --conditional --n_workers 2 --beta 0.01
+python phenocoder/train.py $TMP_DIR --n_dense_dim 256 --n_latent_dim 128 --conditional --n_workers 2 --beta 0.01
+# beta 0.1
+echo "Training with beta 0.1..."
+python phenocoder/train.py $TMP_DIR --n_dense_dim 32 --n_latent_dim 16 --conditional --n_workers 2 --beta 0.1
+python phenocoder/train.py $TMP_DIR --n_dense_dim 64 --n_latent_dim 32 --conditional --n_workers 2 --beta 0.1
+python phenocoder/train.py $TMP_DIR --n_dense_dim 128 --n_latent_dim 64 --conditional --n_workers 2 --beta 0.1
+python phenocoder/train.py $TMP_DIR --n_dense_dim 256 --n_latent_dim 128 --conditional --n_workers 2 --beta 0.1
+# beta 0.5
+echo "Training with beta 0.5..."
+python phenocoder/train.py $TMP_DIR --n_dense_dim 32 --n_latent_dim 16 --conditional --n_workers 2 --beta 0.5
+python phenocoder/train.py $TMP_DIR --n_dense_dim 64 --n_latent_dim 32 --conditional --n_workers 2 --beta 0.5
+python phenocoder/train.py $TMP_DIR --n_dense_dim 128 --n_latent_dim 64 --conditional --n_workers 2 --beta 0.5
+python phenocoder/train.py $TMP_DIR --n_dense_dim 256 --n_latent_dim 128 --conditional --n_workers 2 --beta 0.5
+# beta 1.0
+echo "Training with beta 1.0.."
+python phenocoder/train.py $TMP_DIR --n_dense_dim 32 --n_latent_dim 16 --conditional --n_workers 2 --beta 1
+python phenocoder/train.py $TMP_DIR --n_dense_dim 64 --n_latent_dim 32 --conditional --n_workers 2 --beta 1
+python phenocoder/train.py $TMP_DIR --n_dense_dim 128 --n_latent_dim 64 --conditional --n_workers 2 --beta 1
+python phenocoder/train.py $TMP_DIR --n_dense_dim 256 --n_latent_dim 128 --conditional --n_workers 2 --beta 1
+# move models and tensorboard logs back to DATA_DIR
+echo "Moving models and tensorboard logs back to $DATA_DIR"
+rclone copy $TMP_DIR/models $DATA_DIR/models
+rclone copy $TMP_DIR/tensorboard_logs $DATA_DIR/tensorboard_logs
+# clean up
+echo "Cleaning up $TMP_DIR"
+rclone purge $TMP_DIR

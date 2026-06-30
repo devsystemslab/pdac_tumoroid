@@ -2,7 +2,6 @@ import os
 from math import cos, radians, sin, sqrt
 from pathlib import Path
 
-import anndata as ad
 import muon as mu
 import numpy as np
 import pandas as pd
@@ -11,8 +10,8 @@ from skimage import io
 from skimage.exposure import rescale_intensity
 from tqdm import tqdm
 
-from whole_mount_tumoroid.image_processing.utils import get_metadata
-from whole_mount_tumoroid.phenocoder.utils import scale_image
+from image_processing.utils import get_metadata
+from phenocoder.utils import scale_image
 
 
 class RGBRotate:
@@ -71,9 +70,7 @@ def order_dataframe_hierarchical(
     # Create categorical types with specified order
     df = df.copy()
 
-    df[cancer_col] = pd.Categorical(
-        df[cancer_col], categories=order_cancer, ordered=True
-    )
+    df[cancer_col] = pd.Categorical(df[cancer_col], categories=order_cancer, ordered=True)
     df[caf_col] = pd.Categorical(df[caf_col], categories=order_caf, ordered=True)
     df[drug_col] = pd.Categorical(df[drug_col], categories=order_drugs, ordered=True)
 
@@ -137,9 +134,7 @@ def read_image_for_well(
     plate = parts[1]
 
     # Find matching images in df_images
-    df_match = df_images[
-        (df_images["well_id"] == well) & (df_images["plate_id"] == plate)
-    ]
+    df_match = df_images[(df_images["well_id"] == well) & (df_images["plate_id"] == plate)]
 
     if df_match.empty:
         print(f"No images found for well {well_id}")
@@ -199,31 +194,21 @@ def read_image_for_well(
     # Apply hue rotation for better color visualization
     rotator = RGBRotate()
     rotator.set_hue_rotation(49)
-    img = (
-        np.asarray([rotator.apply(r, g, b) for r, g, b in img.reshape(-1, 3)])
-        .reshape(img.shape)
-        .astype(np.uint8)
-    )
+    img = np.asarray([rotator.apply(r, g, b) for r, g, b in img.reshape(-1, 3)]).reshape(img.shape).astype(np.uint8)
     img = scale_image(img, range=(0, 255)).astype(np.uint8)
 
     return img
 
 
 if __name__ == "__main__":
-    file = "/pstore/data/ihb-tumoroid/data/processed/egfr/anndata/mdata_subset.h5mu"
+    file = "data/multiple_patients/anndata/mdata_subset.h5mu"
     mdata = mu.read_h5mu(file)
     adata = mdata["phenocoder_combined"].copy()
-    file_wells = "/pstore/home/harmelc/tumoroid_screen/whole_mount_tumoroid/analysis/egfr/well_example.yaml"
+    file_wells = "analysis/multiple_patients/well_example.yaml"
     dict_wells = yaml.safe_load(open(file_wells))
     wells = [f"{well}_{key}" for key in dict_wells for well in dict_wells[key]]
     df = adata.obs[adata.obs.index.isin(wells)]
-    df["cancer_caf_treatment"] = (
-        df["cancer"].astype(str)
-        + "_"
-        + df["caf"].astype(str)
-        + "_"
-        + df["drug"].astype(str)
-    )
+    df["cancer_caf_treatment"] = df["cancer"].astype(str) + "_" + df["caf"].astype(str) + "_" + df["drug"].astype(str)
     # sample one from each cancer_caf_treatment
     df = df.groupby("cancer_caf_treatment").sample(1)
     # arrange by patients
@@ -232,20 +217,16 @@ if __name__ == "__main__":
     # arrange columnns cancer, caf by order patient and then in combination with drug order
     df = order_dataframe_hierarchical(df, order_patients, order_patients, drug_order)
     df["cancer_x_caf"] = df["cancer"].astype(str) + "_" + df["caf"].astype(str)
-    dir_images = "/pstore/data/ihb-tumoroid/data/processed/egfr"
+    dir_images = "data/multiple_patients"
     # get df_images
     df_images = pd.concat(
         [
-            get_metadata(f"{dir_images}/008/008-01/TIF_MIP_OVR_BG").assign(
-                plate_id="008"
-            ),
-            get_metadata(f"{dir_images}/009/009-01/TIF_MIP_OVR_BG").assign(
-                plate_id="009"
-            ),
+            get_metadata(f"{dir_images}/008/008-01/TIF_MIP_OVR_BG").assign(plate_id="008"),
+            get_metadata(f"{dir_images}/009/009-01/TIF_MIP_OVR_BG").assign(plate_id="009"),
         ]
     )
 
-    dir_out = "/pstore/home/harmelc/tumoroid_screen/whole_mount_tumoroid/analysis/egfr/plots/example_images"
+    dir_out = "analysis/multiple_patients/plots/example_images"
     Path(dir_out).mkdir(parents=True, exist_ok=True)
     df["file_img"] = df.index.map(lambda i: os.path.join(dir_out, f"{i}.png"))
     for i in tqdm(df.index, desc="Generating example images"):

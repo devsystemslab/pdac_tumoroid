@@ -9,4 +9,4 @@
 #BSUB -e logs/postprocessing_pilotscreen-%J.err                   # Error file
 #BSUB -R "rusage[mem=100GB/host]"
 
-python /pstore/home/harmelc/tumoroid/whole_mount_tumoroid/analysis/pilotscreen/run_postprocesing.py
+python analysis/pilotscreen/run_postprocesing.py

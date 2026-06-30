@@ -10,7 +10,7 @@ from phenocoder.spatial import run_spatial_feature_processing
 
 if __name__ == "__main__":
     screen = "pilotscreen"
-    file = "whole_mount_tumoroid/configs/params.yaml"
+    file = "configs/params.yaml"
     with open(file) as f:
         params = yaml.load(f, Loader=yaml.FullLoader)
         params = params[screen]

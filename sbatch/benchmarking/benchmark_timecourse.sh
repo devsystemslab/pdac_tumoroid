@@ -9,5 +9,5 @@
 
 BATCHES=$(seq 0 31)
 PARAMS=$(echo $BATCHES | cut -d' ' -f${SLURM_ARRAY_TASK_ID})
-SCRIPT=/pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/analysis/timecourse/run_benchmark.py
+SCRIPT=analysis/timecourse/run_benchmark.py
 python $SCRIPT --batch $PARAMS --batch_size=24

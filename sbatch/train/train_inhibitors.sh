@@ -19,10 +19,10 @@ echo "DATA_DIR: $DATA_DIR"
 #rclone copy $DATA_DIR $TMP_DIR -P
 # beta 0.01
 echo "Training with beta 0.01..."
-python /pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/phenocoder/train.py $TMP_DIR --n_dense_dim 32 --n_latent_dim 16  --n_epochs 10 --conditional --ignore_dataset_condition --plates 004 --n_workers 4 --beta 0.01
-python /pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/phenocoder/train.py $TMP_DIR --n_dense_dim 64 --n_latent_dim 32 --n_epochs 10 --conditional --ignore_dataset_condition --plates 004 --n_workers 4 --beta 0.01
-#python /pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/phenocoder/train.py $TMP_DIR --n_dense_dim 128 --n_latent_dim 64 --n_epochs 10 --conditional --ignore_dataset_condition --plates 004 --n_workers 4 --beta 0.01
-#python /pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/phenocoder/train.py $TMP_DIR --n_dense_dim 256 --n_latent_dim 128 --n_epochs 10 --conditional --ignore_dataset_condition --plates 004 --n_workers 4 --beta 0.01
+python phenocoder/train.py $TMP_DIR --n_dense_dim 32 --n_latent_dim 16  --n_epochs 10 --conditional --ignore_dataset_condition --plates 004 --n_workers 4 --beta 0.01
+python phenocoder/train.py $TMP_DIR --n_dense_dim 64 --n_latent_dim 32 --n_epochs 10 --conditional --ignore_dataset_condition --plates 004 --n_workers 4 --beta 0.01
+#python phenocoder/train.py $TMP_DIR --n_dense_dim 128 --n_latent_dim 64 --n_epochs 10 --conditional --ignore_dataset_condition --plates 004 --n_workers 4 --beta 0.01
+#python phenocoder/train.py $TMP_DIR --n_dense_dim 256 --n_latent_dim 128 --n_epochs 10 --conditional --ignore_dataset_condition --plates 004 --n_workers 4 --beta 0.01
 
 # move models and tensorboard logs back to DATA_DIR
 echo "Moving models and tensorboard logs back to $DATA_DIR"

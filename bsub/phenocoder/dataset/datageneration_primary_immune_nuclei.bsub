@@ -8,27 +8,27 @@
 #BSUB -e logs/immune_primary_dataset-%J_%I.err   # Error files
 #BSUB -R "rusage[mem=100GB/host]"
 
-DIR_INPUT=/pstore/data/ihb-tumoroid/data/processed/immune/017/017-01/TIF_OVR_BG
-DIR_SEGMENTED=/pstore/data/ihb-tumoroid/data/processed/immune/017/017-01/features/nuclei/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroid/data/processed/immune/phenocoder/primary_immune_nuclei/017-01
+DIR_INPUT=data/immune/017/017-01/TIF_OVR_BG
+DIR_SEGMENTED=data/immune/017/017-01/features/nuclei/TIF_OVR_BG
+DIR_OUTPUT=data/immune/phenocoder/primary_immune_nuclei/017-01
 echo "DIR_INPUT: $DIR_INPUT"
 echo "DIR_OUTPUT: $DIR_OUTPUT"
 echo "DIR_SEGMENTED: $DIR_SEGMENTED"
-python /pstore/home/harmelc/tumoroid/whole_mount_tumoroid/phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 150000
+python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 150000
 
-DIR_INPUT=/pstore/data/ihb-tumoroid/data/processed/immune/018/018-01/TIF_OVR_BG
-DIR_SEGMENTED=/pstore/data/ihb-tumoroid/data/processed/immune/018/018-01/features/nuclei/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroid/data/processed/immune/phenocoder/primary_immune_nuclei/018-01
+DIR_INPUT=data/immune/018/018-01/TIF_OVR_BG
+DIR_SEGMENTED=data/immune/018/018-01/features/nuclei/TIF_OVR_BG
+DIR_OUTPUT=data/immune/phenocoder/primary_immune_nuclei/018-01
 echo "DIR_INPUT: $DIR_INPUT"
 echo "DIR_OUTPUT: $DIR_OUTPUT"
 echo "DIR_SEGMENTED: $DIR_SEGMENTED"
-python /pstore/home/harmelc/tumoroid/whole_mount_tumoroid/phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 150000
+python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 150000
 
-DIR_INPUT=/pstore/data/ihb-tumoroid/data/processed/immune/019/019-01/TIF_OVR_BG
-DIR_SEGMENTED=/pstore/data/ihb-tumoroid/data/processed/immune/019/019-01/features/nuclei/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroid/data/processed/immune/phenocoder/primary_immune_nuclei/019-01
+DIR_INPUT=data/immune/019/019-01/TIF_OVR_BG
+DIR_SEGMENTED=data/immune/019/019-01/features/nuclei/TIF_OVR_BG
+DIR_OUTPUT=data/immune/phenocoder/primary_immune_nuclei/019-01
 echo "DIR_INPUT: $DIR_INPUT"
 echo "DIR_OUTPUT: $DIR_OUTPUT"
 echo "DIR_SEGMENTED: $DIR_SEGMENTED"
-python /pstore/home/harmelc/tumoroid/whole_mount_tumoroid/phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 150000
+python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 150000
 

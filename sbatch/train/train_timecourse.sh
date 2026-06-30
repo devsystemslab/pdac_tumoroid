@@ -12,17 +12,17 @@
 TMP_DIR=/home/schulzp9/scratch/datasets/timecourse/phenocoder
 #mkdir -p $TMP_DIR
 #echo "TMP_DIR: $TMP_DIR"
-DATA_DIR=/pstore/data/ihb-tumoroid/data/processed/timecourse/phenocoder
+DATA_DIR=data/timecourse/phenocoder
 echo "DATA_DIR: $DATA_DIR"
 # copy DATA_DIR to scratch
 echo "Copying $DATA_DIR to $TMP_DIR"
 rclone copy $DATA_DIR $TMP_DIR -P
 # beta 0.01
 echo "Training with beta 0.01..."
-#python /pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/phenocoder/train.py $TMP_DIR --n_dense_dim 32 --n_latent_dim 16 --input_shape 128 128 1 --n_epochs 50 --conditional --n_workers 4 --beta 0.01
-#python /pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/phenocoder/train.py $TMP_DIR --n_dense_dim 64 --n_latent_dim 32 --input_shape 128 128 1 --n_epochs 50 --conditional --n_workers 4 --beta 0.01
-python /pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/phenocoder/train.py $TMP_DIR --n_dense_dim 128 --n_latent_dim 64 --input_shape 128 128 1 --n_epochs 50 --conditional --n_workers 4 --beta 0.01
-python /pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/phenocoder/train.py $TMP_DIR --n_dense_dim 256 --n_latent_dim 128 --input_shape 128 128 1 --n_epochs 50 --conditional --n_workers 4 --beta 0.01
+#python phenocoder/train.py $TMP_DIR --n_dense_dim 32 --n_latent_dim 16 --input_shape 128 128 1 --n_epochs 50 --conditional --n_workers 4 --beta 0.01
+#python phenocoder/train.py $TMP_DIR --n_dense_dim 64 --n_latent_dim 32 --input_shape 128 128 1 --n_epochs 50 --conditional --n_workers 4 --beta 0.01
+python phenocoder/train.py $TMP_DIR --n_dense_dim 128 --n_latent_dim 64 --input_shape 128 128 1 --n_epochs 50 --conditional --n_workers 4 --beta 0.01
+python phenocoder/train.py $TMP_DIR --n_dense_dim 256 --n_latent_dim 128 --input_shape 128 128 1 --n_epochs 50 --conditional --n_workers 4 --beta 0.01
 
 # move models and tensorboard logs back to DATA_DIR
 echo "Moving models and tensorboard logs back to $DATA_DIR"

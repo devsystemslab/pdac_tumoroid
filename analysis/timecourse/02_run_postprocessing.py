@@ -7,7 +7,7 @@ from analysis.utils import (
 )
 
 # set paths
-dir_adata = "/pstore/data/ihb-tumoroid/data/processed/timecourse/anndata"
+dir_adata = "data/timecourse/anndata"
 
 file_registered = "/pmount/projects/site/pred/ihb-tumoroid/data/processed/timecourse/anndata/mdata_registered_imputed_mlp_normalized.h5mu"
 
@@ -15,7 +15,7 @@ file_registered = "/pmount/projects/site/pred/ihb-tumoroid/data/processed/timeco
 mdata_reg = mu.read_h5mu(file_registered)
 
 # organoid embeddings
-file_org = "/pstore/data/ihb-tumoroid/data/processed/timecourse/anndata/mdata_org_mlp_normalized.h5mu"
+file_org = "data/timecourse/anndata/mdata_org_mlp_normalized.h5mu"
 
 # read mdatas
 mdata_org = mu.read_h5mu(file_org)

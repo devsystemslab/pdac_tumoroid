@@ -9,4 +9,4 @@
 #BSUB -e logs/phenocode_immune-%J.err                   # Error file
 #BSUB -R "rusage[mem=100GB/host]"
 
-python /pstore/home/harmelc/tumoroid/whole_mount_tumoroid/analysis/immune/run_phenocoder.py
+python analysis/immune/run_phenocoder.py

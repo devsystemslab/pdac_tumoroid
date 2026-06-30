@@ -40,7 +40,7 @@ def get_plate_intensity_statistics(dir_images: str):
     return df_summary, imgs
 
 
-def run_qc(dir_images: str, plot: True):
+def run_qc(dir_images: str, plot: bool = True):
     """
     Run qc.
     :param dir_images:
@@ -49,7 +49,7 @@ def run_qc(dir_images: str, plot: True):
     """
     df_summary, imgs = get_plate_intensity_statistics(dir_images)
     img_montage = montage(imgs, grid_shape=(16, 24))
-    io.imsave(Path(dir_images, f"montage_all_images.png"), img_montage)
+    io.imsave(Path(dir_images, "montage_all_images.png"), img_montage)
     df_summary.to_csv(Path(dir_images, "qc_intensities.csv"), index=False)
     # aggregate
     df_agg = (
@@ -104,7 +104,7 @@ if __name__ == "__main__":
 
     df_stats = pd.concat(df_stats)
     df_stats["dir_images"] = f"{dir_yokogawa}/" + df_stats["plate_id"]
-    df_meta = pd.read_csv("whole_mount_tumoroid/metafiles/imaging_data_overview.csv")
+    df_meta = pd.read_csv("metafiles/imaging_data_overview.csv")
     df_merged = pd.merge(df_stats, df_meta, on="dir_images", how="left")
     df_merged.to_csv(Path(dir_yokogawa, "qc_stats.csv"), index=False)
     sns.histplot(df_merged, x="mean", hue="screen")

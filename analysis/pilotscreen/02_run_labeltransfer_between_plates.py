@@ -26,7 +26,7 @@ from pathlib import Path
 plt.rc("pdf", fonttype=42)
 
 screen = "pilotscreen"
-file = "/pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/configs/params.yaml"
+file = "configs/params.yaml"
 
 with open(file) as f:
     params = yaml.load(f, Loader=yaml.FullLoader)

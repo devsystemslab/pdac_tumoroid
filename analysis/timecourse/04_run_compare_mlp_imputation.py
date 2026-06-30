@@ -125,10 +125,10 @@ def compute_metrics(df, marker_names):
 
 if __name__ == "__main__":
     screen = "timecourse"
-    file = "/pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/configs/params.yaml"
+    file = "configs/params.yaml"
 
     stain_metadata = pd.read_csv(
-        "/pstore/data/ihb-g-deco/USERS/schulzp9/tumoroid/metafiles/timecourse_stainings_metadata.csv"
+        "metafiles/timecourse_stainings_metadata.csv"
     )
     stain_metadata["staining_set"] = stain_metadata["staining_set"].astype(str)
     stains = stain_metadata.stain.unique()
@@ -265,7 +265,7 @@ if __name__ == "__main__":
 
         # -- Load kNN results ---
         with open(
-            f"/pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/analysis/timecourse/cv_imputation/new_{mod}_{imp}.pkl",
+            f"analysis/timecourse/cv_imputation/new_{mod}_{imp}.pkl",
             "rb",
         ) as f:
             nn_imputation = pickle.load(f)
@@ -292,7 +292,7 @@ if __name__ == "__main__":
     melt_stack = []
     for i in range(2):
         with open(
-            f"/pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/analysis/timecourse/cv_imputation/all_runs_df_10_{i}.pkl",
+            f"analysis/timecourse/cv_imputation/all_runs_df_10_{i}.pkl",
             "rb",
         ) as f:
             nn_imputation = pickle.load(f)
@@ -313,7 +313,7 @@ if __name__ == "__main__":
     melt_stack = []
     for i in range(2):
         with open(
-            f"/pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/analysis/timecourse/cv_imputation/all_runs_neighbors_df_10_{i}.pkl",
+            f"analysis/timecourse/cv_imputation/all_runs_neighbors_df_10_{i}.pkl",
             "rb",
         ) as f:
             nn_imputation = pickle.load(f)

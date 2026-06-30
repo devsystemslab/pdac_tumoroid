@@ -8,50 +8,50 @@
 #BSUB -e phenocoder-data-%J_%I.err   # Error files
 #BSUB -R "rusage[mem=100GB/host]"
 
-DIR_INPUT=/pstore/data/ihb-tumoroid/data/processed/immune/010/010-01/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroid/data/processed/immune/phenocoder/1st_cycle/010-01
+DIR_INPUT=data/immune/010/010-01/TIF_OVR_BG
+DIR_OUTPUT=data/immune/phenocoder/1st_cycle/010-01
 echo "DIR_INPUT: $DIR_INPUT"
 echo "DIR_OUTPUT: $DIR_OUTPUT"
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12
 
-DIR_INPUT=/pstore/data/ihb-tumoroid/data/processed/immune/011/011-01/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroid/data/processed/immune/phenocoder/2nd_cycle/011-01
+DIR_INPUT=data/immune/011/011-01/TIF_OVR_BG
+DIR_OUTPUT=data/immune/phenocoder/2nd_cycle/011-01
 echo "DIR_INPUT: $DIR_INPUT"
 echo "DIR_OUTPUT: $DIR_OUTPUT"
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12
 
-DIR_INPUT=/pstore/data/ihb-tumoroid/data/processed/immune/012/012-01/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroid/data/processed/immune/phenocoder/2nd_cycle/012-01
+DIR_INPUT=data/immune/012/012-01/TIF_OVR_BG
+DIR_OUTPUT=data/immune/phenocoder/2nd_cycle/012-01
 echo "DIR_INPUT: $DIR_INPUT"
 echo "DIR_OUTPUT: $DIR_OUTPUT"
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12
 
-DIR_INPUT=/pstore/data/ihb-tumoroid/data/processed/immune/013/013-01/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroid/data/processed/immune/phenocoder/2nd_cycle/013-01
+DIR_INPUT=data/immune/013/013-01/TIF_OVR_BG
+DIR_OUTPUT=data/immune/phenocoder/2nd_cycle/013-01
 echo "DIR_INPUT: $DIR_INPUT"
 echo "DIR_OUTPUT: $DIR_OUTPUT"
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12
 
-DIR_INPUT=/pstore/data/ihb-tumoroid/data/processed/immune/014/014-01/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroid/data/processed/immune/phenocoder/2nd_cycle/014-01
+DIR_INPUT=data/immune/014/014-01/TIF_OVR_BG
+DIR_OUTPUT=data/immune/phenocoder/2nd_cycle/014-01
 echo "DIR_INPUT: $DIR_INPUT"
 echo "DIR_OUTPUT: $DIR_OUTPUT"
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12
 
-DIR_INPUT=/pstore/data/ihb-tumoroid/data/processed/immune/015/015-01/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroid/data/processed/immune/phenocoder/2nd_cycle/015-01
+DIR_INPUT=data/immune/015/015-01/TIF_OVR_BG
+DIR_OUTPUT=data/immune/phenocoder/2nd_cycle/015-01
 echo "DIR_INPUT: $DIR_INPUT"
 echo "DIR_OUTPUT: $DIR_OUTPUT"
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12
 
-DIR_INPUT=/pstore/data/ihb-tumoroid/data/processed/immune/015/015-02/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroid/data/processed/immune/phenocoder/2nd_cycle/015-02
+DIR_INPUT=data/immune/015/015-02/TIF_OVR_BG
+DIR_OUTPUT=data/immune/phenocoder/2nd_cycle/015-02
 echo "DIR_INPUT: $DIR_INPUT"
 echo "DIR_OUTPUT: $DIR_OUTPUT"
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12
 
-DIR_INPUT=/pstore/data/ihb-tumoroid/data/processed/immune/015/015-03/TIF_OVR_BG
-DIR_OUTPUT=/pstore/data/ihb-tumoroid/data/processed/immune/phenocoder/2nd_cycle/015-03
+DIR_INPUT=data/immune/015/015-03/TIF_OVR_BG
+DIR_OUTPUT=data/immune/phenocoder/2nd_cycle/015-03
 echo "DIR_INPUT: $DIR_INPUT"
 echo "DIR_OUTPUT: $DIR_OUTPUT"
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12

@@ -9,10 +9,10 @@
 #BSUB -R "rusage[mem=100GB/host]"
 
 
-PLATES=$(awk -F',' '$1 == "tumoroidscreen" {print $2}' /pstore/home/harmelc/tumoroid/whole_mount_tumoroid/metafiles/imaging_data_overview.csv)
+PLATES=$(awk -F',' '$1 == "tumoroidscreen" {print $2}' metafiles/imaging_data_overview.csv)
 PLATES=$(echo $PLATES | tr ' ' '\n' | sort -u | tr '\n' ' ')
 DIR_SCREEN=data/tumoroidscreen
-PYTHON_SCRIPT=/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/phenocoder/dataset.py
+PYTHON_SCRIPT=phenocoder/dataset.py
 for PLATE in $PLATES
 do
     echo "Processing plate $PLATE - 1st cycle"

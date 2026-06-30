@@ -10,4 +10,4 @@
 #SBATCH --partition=batch_gpu                       # GPU partition
 #SBATCH --qos=1d
 
-python /pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen/whole_mount_tumoroid/analysis/timecourse/run_phenocoder.py
+python analysis/timecourse/run_phenocoder.py

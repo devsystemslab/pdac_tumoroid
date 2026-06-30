@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append("/pstore/data/ihb-g-deco/USERS/schulzp9/git/tumoroid_screen")
+sys.path.append(".")
 import muon as mu
 
 from analysis.utils import (

@@ -1,0 +1,24 @@
+#!/bin/bash
+#BSUB -J datageneration_multiple_patients_nuclei      # Job name
+#BSUB -n 12           # number of tasks
+#BSUB -R "span[hosts=1]"  # all jobs in one host
+#BSUB -q long         # Select queue
+#BSUB -W 144:00         # Wall-clock time (hrs:mins)
+#BSUB -o datageneration_multiple_patients_nuclei-%J.out   # Output files
+#BSUB -e datageneration_multiple_patients_nuclei-%J.err   # Error files
+#BSUB -R "rusage[mem=100GB/host]"
+
+DIR_INPUT=data/multiple_patients/007/007-01/TIF_OVR_BG
+DIR_SEGMENTED=data/multiple_patients/007/007-01/features/nuclei/TIF_OVR_BG
+DIR_OUTPUT=data/multiple_patients/phenocoder/1st_cycle_nuclei/007-01
+python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 500000
+
+DIR_INPUT=data/multiple_patients/008/008-01/TIF_OVR_BG
+DIR_SEGMENTED=data/multiple_patients/008/008-01/features/nuclei/TIF_OVR_BG
+DIR_OUTPUT=data/multiple_patients/phenocoder/1st_cycle_nuclei/008-01
+python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 500000
+
+DIR_INPUT=data/multiple_patients/009/009-01/TIF_OVR_BG
+DIR_SEGMENTED=data/multiple_patients/009/009-01/features/nuclei/TIF_OVR_BG
+DIR_OUTPUT=data/multiple_patients/phenocoder/1st_cycle_nuclei/009-01
+python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 12 --dir_segmented $DIR_SEGMENTED --patch_mode "segmented" --n_patches 500000

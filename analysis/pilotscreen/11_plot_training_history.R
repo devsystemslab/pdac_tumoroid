@@ -3,7 +3,7 @@ library(patchwork)
 library(RColorBrewer)
 
 dir_screen <- 'data/processed/pilotscreen'
-dir_analysis <- 'whole_mount_tumoroid/analysis/pilotscreen'
+dir_analysis <- 'analysis/pilotscreen'
 dir_tensorboard <- str_c(dir_analysis,'plots','tensorboard', sep = '/')
 datasets <- list.files(dir_tensorboard) %>% set_names()
 # history plots - KL, reconstruction loss, epoch loss

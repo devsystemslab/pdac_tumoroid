@@ -13,7 +13,7 @@ from phenocoder.spatial import run_spatial_feature_processing
 
 if __name__ == "__main__":
     screen = "timecourse"
-    file = "whole_mount_tumoroid/configs/params.yaml"
+    file = "configs/params.yaml"
 
     with open(file) as f:
         params = yaml.load(f, Loader=yaml.FullLoader)
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     print(params)
     # TODO: clean paths
     stain_metadata = pd.read_csv(
-        "/pstore/data/ihb-g-deco/USERS/schulzp9/tumoroid/metafiles/timecourse_stainings_metadata.csv"
+        "metafiles/timecourse_stainings_metadata.csv"
     )
     stain_metadata["staining_set"] = stain_metadata["staining_set"].astype(str)
     stains = stain_metadata.stain.unique()

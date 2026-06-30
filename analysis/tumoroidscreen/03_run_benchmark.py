@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append("/pstore/home/harmelc/tumoroid")
+sys.path.append(".")
 import argparse
 from pathlib import Path
 

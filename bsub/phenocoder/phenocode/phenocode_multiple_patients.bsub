@@ -1,0 +1,12 @@
+#!/bin/bash
+#BSUB -J phenocode_multiple_patients  # Job name
+#BSUB -n 12                               # number of tasks
+#BSUB -R "span[hosts=1]"                 # Allocate all tasks in 1 host
+#BSUB -q long                        # Select queue
+#BSUB -W 72:00                          # walltime
+#BSUB -gpu "num=1:j_exclusive=yes"       # Request 1 GPU exclusive for the job
+#BSUB -o logs/phenocode_multiple_patients-%J.out                   # Output file
+#BSUB -e logs/phenocode_multiple_patients-%J.err                   # Error file
+#BSUB -R "rusage[mem=100GB/host]"
+
+python analysis/multiple_patients/run_phenocoder.py

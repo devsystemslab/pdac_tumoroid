@@ -9,5 +9,5 @@
 
 BATCHES=$(seq 0 31)
 PARAMS=$(echo $BATCHES | cut -d' ' -f${LSB_JOBINDEX})
-SCRIPT=/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/analysis/tumoroidscreen/run_benchmark.py
+SCRIPT=analysis/tumoroidscreen/run_benchmark.py
 python $SCRIPT --batch $PARAMS --batch_size=48

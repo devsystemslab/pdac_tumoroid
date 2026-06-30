@@ -8,10 +8,10 @@
 #BSUB -e logs/datageneration_tumoroidscreen_3_nuclei-%J_%I.err   # Error files
 #BSUB -R "rusage[mem=100GB/host]"
 
-PLATES=$(awk -F',' '$1 == "tumoroidscreen_3" {print $2}' /pstore/home/harmelc/tumoroid/whole_mount_tumoroid/metafiles/imaging_data_overview.csv)
+PLATES=$(awk -F',' '$1 == "tumoroidscreen_3" {print $2}' metafiles/imaging_data_overview.csv)
 PLATES=$(echo $PLATES | tr ' ' '\n' | sort -u | tr '\n' ' ')
-DIR_SCREEN=/pstore/data/ihb-g-deco/USERS/harmelc/tumoroidscreen_3
-PYTHON_SCRIPT=/pstore/home/harmelc/tumoroid/whole_mount_tumoroid/phenocoder/dataset.py
+DIR_SCREEN=data/tumoroidscreen_3
+PYTHON_SCRIPT=phenocoder/dataset.py
 for PLATE in $PLATES
 do
     echo "Processing plate $PLATE - 1st cycle"
