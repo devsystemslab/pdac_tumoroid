@@ -2,7 +2,7 @@ library(tidyverse)
 library(patchwork)
 library(RColorBrewer)
 
-dir_screen <- 'data/processed/tumoroidscreen'
+dir_screen <- 'data/tumoroidscreen'
 dir_analysis <- 'analysis/tumoroidscreen'
 dir_tensorboard <- str_c(dir_analysis, 'plots', 'tensorboard', sep = '/')
 datasets <- list.files(dir_tensorboard) %>% set_names()

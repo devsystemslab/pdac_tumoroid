@@ -474,7 +474,7 @@ def generate_examples(
     n_down_sampling: int = None,
     input_type: str = "TIF_MIP_OVR_BG",
     scale_bar: int = None,
-    dir_screen: str = "data/processed/tumoroidscreen",
+    dir_screen: str = "data/tumoroidscreen",
 ):
     """
     Generate example images

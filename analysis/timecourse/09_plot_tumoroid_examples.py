@@ -178,7 +178,7 @@ def plot_organoid(
 
 
 if __name__ == "__main__":
-    dir_screen = "data/processed/timecourse"
+    dir_screen = "data/timecourse"
     df_stains = pd.read_csv(
         "metafiles/timecourse_stainings_metadata.csv"
     )
@@ -252,14 +252,14 @@ if __name__ == "__main__":
         "004": [(1, 99), (1, 99), (1, 99), (1, 99)],
         "005": [(1, 99), (1, 99), (1, 99), (1, 99)],
     }
-    dir_output = "data/processed/timecourse/example_overlays_SDC1_YAP_Phalloidin"
+    dir_output = "data/timecourse/example_overlays_SDC1_YAP_Phalloidin"
     # generate overlays for DAPI, SDC1, Phalloidin and YAP
     wells = {"001": "H05", "002": "H05", "003": "H05", "004": "H05", "005": "D05"}
     generate_images_for_staining_set(
         wells, timepoints, luts, dir_output, save=False, plot=True
     )
 
-    dir_output = "data/processed/timecourse/example_overlays_SDC1_ITGA2_LAMC2"
+    dir_output = "data/timecourse/example_overlays_SDC1_ITGA2_LAMC2"
     # generate overlays for DAPI, SDC1, Phalloidin and YAP
     well_positions = ["A01", "B01", "C01", "D01", "E01", "F01", "G01"]
 
@@ -276,7 +276,7 @@ if __name__ == "__main__":
             wells, timepoints, luts, dir_output, save=True, plot=False
         )
 
-    dir_output = "data/processed/timecourse/example_overlays_COL1_KI67_CK19"
+    dir_output = "data/timecourse/example_overlays_COL1_KI67_CK19"
     well_positions = ["I01", "J01", "K01", "L01", "M01", "N01", "O01"]
 
     for well in well_positions:

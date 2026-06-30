@@ -8,18 +8,18 @@
 #BSUB -e phenocoder-data-%J_%I.err   # Error files
 #BSUB -R "rusage[mem=100GB/host]"
 
-#DIR_INPUT=data/inhibitors/004/004-01/TIF_OVR_BG
-#DIR_OUTPUT=data/inhibitors/phenocoder/1st_cycle/004-01
+#DIR_INPUT=data/pilotscreen/004/004-01/TIF_OVR_BG
+#DIR_OUTPUT=data/pilotscreen/phenocoder/1st_cycle/004-01
 #python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 32
 #
-#DIR_INPUT=data/inhibitors/005/005-01/TIF_OVR_BG
-#DIR_OUTPUT=data/inhibitors/phenocoder/1st_cycle/005-01
+#DIR_INPUT=data/pilotscreen/005/005-01/TIF_OVR_BG
+#DIR_OUTPUT=data/pilotscreen/phenocoder/1st_cycle/005-01
 #python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 32
 
-DIR_INPUT=data/inhibitors/004/004-03/TIF_OVR_BG
-DIR_OUTPUT=data/inhibitors/phenocoder/2nd_cycle/004-03
+DIR_INPUT=data/pilotscreen/004/004-03/TIF_OVR_BG
+DIR_OUTPUT=data/pilotscreen/phenocoder/2nd_cycle/004-03
 python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 32
 
-#DIR_INPUT=data/inhibitors/005/005-03/TIF_OVR_BG
-#DIR_OUTPUT=data/inhibitors/phenocoder/2nd_cycle/005-03
+#DIR_INPUT=data/pilotscreen/005/005-03/TIF_OVR_BG
+#DIR_OUTPUT=data/pilotscreen/phenocoder/2nd_cycle/005-03
 #python phenocoder/dataset.py $DIR_INPUT $DIR_OUTPUT --max_workers 32

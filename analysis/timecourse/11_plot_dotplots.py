@@ -41,7 +41,7 @@ def plot_dotplots(adata, adata_neighbors, output_dir, ordered_genes=None):
 
 
 mdata = mu.read_h5mu(
-    "/pmount/projects/site/pred/ihb-tumoroid/data/processed/timecourse/anndata/mdata_registered_imputed_mlp_normalized.h5mu"
+    "data/timecourse/anndata/mdata_registered_imputed_mlp_normalized.h5mu"
 )
 adata = mdata["phenocoder_msg_nuclei_imputed"]
 adata_neigh = mdata["phenocoder_msg_neighbors_imputed"]

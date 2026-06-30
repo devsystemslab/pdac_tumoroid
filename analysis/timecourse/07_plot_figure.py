@@ -12,7 +12,7 @@ from phenocoder.utils import get_metadata
 
 if __name__ == "__main__":
     # C11 - staining test- DAPI, SDC1, ITGA2, LAMC2
-    dir_images = "data/processed/staining_test/001/001-01"
+    dir_images = "data/staining_test/001/001-01"
     df_images = get_metadata(Path(dir_images, "TIF_OVR"))
     # filter for well C11
     df_images = df_images[df_images["well_id"] == "C11"]
@@ -202,7 +202,7 @@ if __name__ == "__main__":
     plt.show()
     # save image:
     io.imsave(
-        "data/processed/staining_test/001/tumoroid_viewer/screenshots/C11_overlay_python.png",
+        "data/staining_test/001/tumoroid_viewer/screenshots/C11_overlay_python.png",
         img_overlay,
     )
 
@@ -222,12 +222,12 @@ if __name__ == "__main__":
     plt.show()
     # save image:
     io.imsave(
-        "data/processed/staining_test/001/tumoroid_viewer/screenshots/C11_overlay_python_z14.png",
+        "data/staining_test/001/tumoroid_viewer/screenshots/C11_overlay_python_z14.png",
         img_overlay,
     )
 
     # H08 - pilotscreen dataset - DAPI, SDC1, ITGA2, LAMC2
-    dir_images = "data/processed/pilotscreen/004/004-03"
+    dir_images = "data/pilotscreen/004/004-03"
     df_images = get_metadata(Path(dir_images, "TIF_OVR"))
     # filter for well C11
     df_images = df_images[df_images["well_id"] == "H08"]
@@ -264,7 +264,7 @@ if __name__ == "__main__":
     plt.show()
 
     io.imsave(
-        "data/processed/pilotscreen/example_overlays/004-03/H08/overlay_figure_2.png",
+        "data/pilotscreen/example_overlays/004-03/H08/overlay_figure_2.png",
         img_overlay,
     )
     for i in range(30):
@@ -283,7 +283,7 @@ if __name__ == "__main__":
         # io.imshow(img_overlay)
         # plt.show()
         io.imsave(
-            f"data/processed/pilotscreen/example_overlays/004-03/H08/overlay_figure_2_zslice_{i}.png",
+            f"data/pilotscreen/example_overlays/004-03/H08/overlay_figure_2_zslice_{i}.png",
             img_overlay,
         )
     img_collagen = scale_image(
@@ -300,7 +300,7 @@ if __name__ == "__main__":
         y=img_overlay.shape[0] - offset_y - height,
     )
     io.imsave(
-        "data/processed/pilotscreen/example_overlays/004-03/H08/overlay_figure_2_collagen.png",
+        "data/pilotscreen/example_overlays/004-03/H08/overlay_figure_2_collagen.png",
         img_collagen,
     )
 
@@ -314,7 +314,7 @@ if __name__ == "__main__":
         prefix=None,
     ):
         # H05 - timecourse
-        dir_images = f"data/processed/timecourse/{plate}/{plate}-01"
+        dir_images = f"data/timecourse/{plate}/{plate}-01"
         df_images = get_metadata(Path(dir_images, "TIF_OVR_BG"))
         # filter for well C11
         df_images = df_images[df_images["well_id"] == well]
@@ -350,11 +350,11 @@ if __name__ == "__main__":
             plt.show()
         if save:
             io.imsave(
-                f"data/processed/timecourse/example_overlays_figure/{prefix}-{plate}-{well}.png",
+                f"data/timecourse/example_overlays_figure/{prefix}-{plate}-{well}.png",
                 img_overlay,
             )
 
-    dir_screen = "data/processed/timecourse"
+    dir_screen = "data/timecourse"
     df_stains = pd.read_csv(
         "metafiles/timecourse_stainings_metadata.csv"
     )

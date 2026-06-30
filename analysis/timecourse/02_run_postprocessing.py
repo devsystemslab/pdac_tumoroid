@@ -9,7 +9,7 @@ from analysis.utils import (
 # set paths
 dir_adata = "data/timecourse/anndata"
 
-file_registered = "/pmount/projects/site/pred/ihb-tumoroid/data/processed/timecourse/anndata/mdata_registered_imputed_mlp_normalized.h5mu"
+file_registered = "data/timecourse/anndata/mdata_registered_imputed_mlp_normalized.h5mu"
 
 # read mdatas
 mdata_reg = mu.read_h5mu(file_registered)

@@ -6,7 +6,7 @@ library(patchwork)
 
 
 dir_analysis <- 'analysis/tumoroidscreen'
-dir_plots <- 'data/processed/tumoroidscreen/plots'
+dir_plots <- 'data/tumoroidscreen/plots'
 df_genes_perturb <- readr::read_csv(str_c(dir_analysis,'tables','top100_genes_sorted.csv',sep='/'))
 df_mc_cluster <- readr::read_tsv(str_c(dir_analysis,'string','string_MCL_clusters.tsv',sep='/'))
 colnames(df_mc_cluster) <- str_replace(colnames(df_mc_cluster),' ','_')

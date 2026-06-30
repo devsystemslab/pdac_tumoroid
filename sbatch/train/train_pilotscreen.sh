@@ -9,7 +9,7 @@
 #SBATCH --partition=batch_gpu                       # GPU partition
 #SBATCH --qos=3d
 
-TMP_DIR=/home/schulzp9/scratch/datasets/pilotscreen/2nd_cycle_nuclei
+TMP_DIR=scratch/datasets/pilotscreen/2nd_cycle_nuclei
 #mkdir -p $TMP_DIR
 echo "TMP_DIR: $TMP_DIR"
 DATA_DIR=data/pilotscreen/phenocoder/2nd_cycle_nuclei

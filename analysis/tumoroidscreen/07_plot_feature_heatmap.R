@@ -8,7 +8,7 @@ library(tidygraph)
 library(ggrepel)
 library(scales)
 # set directories
-dir_screen <- 'data/processed/tumoroidscreen'
+dir_screen <- 'data/tumoroidscreen'
 dir_adata <- str_c(dir_screen, 'anndata', sep='/')
 dir_plots <- str_c(dir_screen, 'plots', sep='/')
 dir_analysis <- 'analysis/tumoroidscreen'
@@ -131,7 +131,7 @@ p_heatmap_org_features <- pheatmap::pheatmap(t(M), scale='row',
                                              labels_col = str_replace_na(df_scores_agg$CODENAME))
 
 # save plot
-ggsave('data/processed/tumoroidscreen/plots/interaction_heatmap_merged.pdf', plot = p_heatmap_org_features[[4]],
+ggsave('data/tumoroidscreen/plots/interaction_heatmap_merged.pdf', plot = p_heatmap_org_features[[4]],
        dpi = 112, unit = 'mm', width = 400.05, height = 215.22)
 # write to csv
 df_scores_agg %>%

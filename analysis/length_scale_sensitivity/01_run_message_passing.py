@@ -26,7 +26,7 @@ def message_passing(adata, radii):
 
 def main(
     file="mdata_cycle-01.h5mu",
-    dir_adata="data/inhibitors/anndata",
+    dir_adata="data/pilotscreen/anndata",
 ):
     mdata = mu.read_h5mu(f"{dir_adata}/{file}")
     adata = mdata.mod["nuclei"]

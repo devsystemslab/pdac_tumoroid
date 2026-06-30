@@ -8,7 +8,7 @@ from analysis.utils import (
 )
 
 # set paths
-dir_adata = "data/processed/pilotscreen/anndata"
+dir_adata = "data/pilotscreen/anndata"
 file_registered = f"{dir_adata}/mdata_registered.h5mu"
 file_cycle_01 = f"{dir_adata}/mdata_cycle-01.h5mu"
 file_cycle_03 = f"{dir_adata}/mdata_cycle-03.h5mu"

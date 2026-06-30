@@ -14,7 +14,7 @@ if __name__ == "__main__":
     parser.add_argument("--host", default="client")
     args = parser.parse_args()
     # set paths
-    dir_adata = "data/processed/pilotscreen/anndata"
+    dir_adata = "data/pilotscreen/anndata"
     for cycle in [1, 3]:
         dir_results = Path(dir_adata, "benchmarking", f"cycle_0{cycle}")
         dir_results.mkdir(parents=True, exist_ok=True)

@@ -90,7 +90,7 @@ if __name__ == "__main__":
         "data/segmentation_validation_inhibitors/segmentation_validation_inhibitors/004/004-01/segmentation_plots/shared_merged_labels"
     )
     mdata_org = mu.read_h5mu(
-        "data/inhibitors/anndata/mdata_org_combined.h5mu"
+        "data/pilotscreen/anndata/mdata_org_combined.h5mu"
     )
     all_results = []
     all_merged = []

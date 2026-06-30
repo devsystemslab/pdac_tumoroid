@@ -127,7 +127,7 @@ if __name__ == "__main__":
         params = params[screen]
 
     # set paths
-    dir_screen = "data/processed/pilotscreen"
+    dir_screen = "data/pilotscreen"
     dir_adata = f"{dir_screen}/anndata"
     file_org = f"{dir_adata}/mdata_org_combined.h5mu"
     file_cycle_01 = f"{dir_adata}/mdata_cycle-01.h5mu"

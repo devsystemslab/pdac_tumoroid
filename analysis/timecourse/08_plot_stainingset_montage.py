@@ -121,7 +121,7 @@ def generate_stainingset_montage(
 
 
 if __name__ == "__main__":
-    dir_screen = "data/processed/timecourse"
+    dir_screen = "data/timecourse"
     file_plate_layout = "metafiles/timecourse_layout.csv"
 
     plates = ["001", "002", "003", "004", "005"]

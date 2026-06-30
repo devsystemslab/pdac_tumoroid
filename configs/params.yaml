@@ -1,5 +1,5 @@
 immune:
-    dir_screen: "data/processed/immune"
+    dir_screen: "data/immune"
     plates: ["010"]
     markers:
         ch_01_neighbors: "DAPI"
@@ -13,7 +13,7 @@ immune:
     registered: false
     input_type: TIF_OVR_BG
     phenocoder:
-        dir_models: "data/processed/immune/phenocoder"
+        dir_models: "data/immune/phenocoder"
         models:
             source:
                 cycle: "01"
@@ -32,7 +32,7 @@ immune:
             org_embedding: 0.5
 
 pilotscreen:
-    dir_screen: "data/processed/pilotscreen"
+    dir_screen: "data/pilotscreen"
     registered: true
     plates: ["004", "005"]
     input_type: TIF_OVR_BG
@@ -58,7 +58,7 @@ pilotscreen:
         target_ch_03_nuclei: "KI67"
         target_ch_04_nuclei: "CK19"
     phenocoder:
-        dir_models: "data/processed/pilotscreen/phenocoder"
+        dir_models: "data/pilotscreen/phenocoder"
         models:
             source:
                 cycle: "01"
@@ -80,7 +80,7 @@ pilotscreen:
             org_embedding: 0.5
 
 tumoroidscreen:
-    dir_screen: "data/processed/tumoroidscreen"
+    dir_screen: "data/tumoroidscreen"
     plates: ["HM001", "HM002", "HM003", "HM004", "HM005", "HM006"]
     input_type: TIF_OVR_BG
     registered: true
@@ -106,7 +106,7 @@ tumoroidscreen:
         target_ch_03_nuclei: "KI67"
         target_ch_04_nuclei: "CK19"
     phenocoder:
-        dir_models: "data/processed/tumoroidscreen/phenocoder"
+        dir_models: "data/tumoroidscreen/phenocoder"
         models:
             source:
                 cycle: "01"
@@ -128,7 +128,7 @@ tumoroidscreen:
             org_embedding: 0.5
 
 timecourse:
-    dir_screen: "data/processed/timecourse"
+    dir_screen: "data/timecourse"
     plates: ["001", "002", "003", "004", "005"]
     input_type: TIF_OVR_BG
     registered: false
@@ -136,7 +136,7 @@ timecourse:
         ch_01_neighbors: "DAPI"
         ch_01_nuclei: "DAPI"
     phenocoder:
-        dir_models: data/processed/timecourse/phenocoder
+        dir_models: data/timecourse/phenocoder
         models:
             source:
                 cycle: "01"

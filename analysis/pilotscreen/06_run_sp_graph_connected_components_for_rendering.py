@@ -301,8 +301,8 @@ def process_well(
 
 if __name__ == "__main__":
     # set paths
-    dir_adata = "data/processed/pilotscreen/anndata"
-    dir_output = "data/processed/pilotscreen/graph_segmentations"
+    dir_adata = "data/pilotscreen/anndata"
+    dir_output = "data/pilotscreen/graph_segmentations"
     # set files
     file_cycle_01 = f"{dir_adata}/mdata_cycle-01.h5mu"
     file_cycle_03 = f"{dir_adata}/mdata_cycle-03.h5mu"

@@ -9,7 +9,7 @@
 #SBATCH --partition=batch_gpu                       # GPU partition
 #SBATCH --qos=1d
 
-TMP_DIR=/home/schulzp9/scratch/datasets/timecourse/phenocoder
+TMP_DIR=scratch/datasets/timecourse/phenocoder
 #mkdir -p $TMP_DIR
 #echo "TMP_DIR: $TMP_DIR"
 DATA_DIR=data/timecourse/phenocoder

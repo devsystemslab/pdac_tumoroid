@@ -8,7 +8,7 @@ library(tidygraph)
 library(ggrepel)
 
 # set directories
-dir_screen <- 'data/processed/tumoroidscreen'
+dir_screen <- 'data/tumoroidscreen'
 dir_adata <- str_c(dir_screen, 'anndata', sep='/')
 dir_plots <- str_c(dir_screen, 'plots', sep='/')
 dir_analysis <- 'analysis/tumoroidscreen'
