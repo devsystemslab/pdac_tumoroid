@@ -54,4 +54,4 @@ for mod in mdata_org.mod.keys():
 # Update MuData to reflect changes in modalities
 mdata_org.update()
 # write to new file
-mdata_org.write_h5mu(f"{dir_adata}/mdata_subset.h5mu")
+mdata_org.write_h5mu(f"{dir_adata}/mdata_multiple_patients_org.h5mu")

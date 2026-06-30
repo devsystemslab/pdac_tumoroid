@@ -91,5 +91,5 @@ for mod_key in mdata_org_cycle_01.mod_names:
 mdata_org_combined = mu.MuData(adata_dict)
 
 # write mdata
-file_combined = f"{dir_adata}/mdata_org_combined.h5mu"
+file_combined = f"{dir_adata}/mdata_tumoroidscreen_org.h5mu"
 mdata_org_combined.write_h5mu(file_combined)

@@ -23,7 +23,7 @@ Configuration is YAML-driven (`configs/`), and the heavy compute steps are dispa
 | Path | Description |
 |------|-------------|
 | `image_processing/` | CLI-driven microscopy pipeline: flatfield & illumination correction, background correction, MIP, 3D stitching, cross-cycle registration, Cellpose segmentation, feature extraction, neighborhood construction, montaging, and QC. |
-| `phenocoder/` | Core ML package ([standalone implementation](https://github.com/devsystemslab/phenocoder)). Conditional/standard convolutional VAE, patch generators for nuclei or grid sampling, phenospace embedding, spatial graphs & convex-hull metrics via squidpy, clustering, training, and plotting. |
+| `phenocoder/` | Core ML package (also see [standalone implementation of Phenocoder](https://github.com/devsystemslab/phenocoder)). Conditional/standard convolutional VAE, patch generators for nuclei or grid sampling, phenospace embedding, spatial graphs & convex-hull metrics via squidpy, clustering, training, and plotting. |
 | `laminator/` | Reimplementation of Laminator ([Wahle et al., *Nat. Biotechnol.* 2023](https://www.nature.com/articles/s41587-023-01747-2)) for "laminating" organoid images into oriented windows and radial-neighborhood message passing. Used for length-scale analyses. |
 | `benchmarking/` | Embedding-quality metrics: graph connectivity, multi-label AMI, cLISI/CAS/NASW, plus ARI/NMI, used to compare phenocoder embeddings against nuclei-only and alternative baselines. |
 | `configs/` | Per-screen YAML configs and master parameters (screens, channel/marker maps, plates, phenocoder model params). |
@@ -43,6 +43,14 @@ Each subdirectory of `analysis/` is a self-contained, numerically ordered pipeli
 | `pilotscreen/` | FDA-compound pilot screen, including cross-plate label transfer and spatial-graph rendering. |
 | `multiple_patients/` | Generalization across multiple patient-derived lines. |
 | `tumoroidscreen/` | Main PDAC + CAF inhibitor screen — phenocoding, benchmarking, feature heatmaps, compound-effect analysis, STRING network, example tumoroids. |
+
+## Data availability
+
+The processed images and `mdata` (`.h5mu`) files are deposited in the EMBL-EBI BioImage Archive:
+
+> **DOI:** _TBD — add accession/DOI on publication._
+
+Each screen is organized as `<screen>/images/` and `<screen>/mdata/`. The analysis scripts read these `.h5mu` files (see `analysis/`).
 
 ## License
 

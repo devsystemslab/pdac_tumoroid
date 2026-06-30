@@ -43,4 +43,4 @@ mdata_org = add_chull_stats_to_mdata_org(
 )
 mdata_org = mu.MuData(mdata_org.mod)
 # write mdatas
-mdata_org.write_h5mu(f"{dir_adata}/mdata_org_chull_mlp_normalized.h5mu")
+mdata_org.write_h5mu(f"{dir_adata}/mdata_timecourse_org.h5mu")

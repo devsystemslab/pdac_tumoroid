@@ -97,7 +97,7 @@ for cyc in cycle:
 ############# SAVE ###########################################################
 
 mdata_combined = mu.MuData(collected)
-mdata_combined.write(Path(dir_results, f"mdata_plate4_projected.h5mu"))
+mdata_combined.write(Path(dir_results, f"mdata_label_transfer.h5mu"))
 
 mdata_combined = mu.read_h5mu(Path(dir_results, "mdata_plate4_projected.h5mu"))
 

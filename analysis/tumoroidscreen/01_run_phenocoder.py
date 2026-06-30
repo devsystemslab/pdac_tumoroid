@@ -62,6 +62,7 @@ if __name__ == "__main__":
 
     # run phenocoder pipeline for each cycle individually
     cycles = {"01": "source", "03": "target"}
+    cycle_archive = {"01": "01", "03": "02"}  # imaging cycle -> BioImage Archive cycle index
     for cycle in cycles.keys():
         print(f"Running phenocoder pipeline for cycle {cycle}...")
         markers = {
@@ -87,7 +88,7 @@ if __name__ == "__main__":
             res=params["phenocoder"]["cluster_res"],
         )
 
-        mdata.write_h5mu(Path(dir_results, f"mdata_cycle-{cycle}.h5mu"))
+        mdata.write_h5mu(Path(dir_results, f"mdata_tumoroidscreen_sc_cycle{cycle_archive[cycle]}.h5mu"))
 
         spatial_dict = run_spatial_feature_processing(mdata)
 

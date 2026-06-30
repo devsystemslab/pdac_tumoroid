@@ -25,7 +25,7 @@ df.columns.name = None
 dir_adata = f"{params['dir_screen']}/anndata"
 mdata = mu.read_h5mu(f"{dir_adata}/mdata.h5mu")
 mdata = run_umap_gpu(mdata, rep="X_pca")
-mdata.write_h5mu(f"{dir_adata}/mdata.h5mu")
+mdata.write_h5mu(f"{dir_adata}/mdata_multiple_patients_sc.h5mu")
 
 mdata_org = mu.read_h5mu(f"{dir_adata}/mdata_org.h5mu")
 for mod in mdata_org.mod_names:
