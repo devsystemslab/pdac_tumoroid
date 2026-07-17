@@ -6,10 +6,11 @@ import numpy as np
 import pandas as pd
 import squidpy as sq
 import yaml
-from scipy.sparse import csr_array
+from scipy.sparse import csr_array, diags_array, issparse
 
 from phenocoder.generator import GridPatchGenerator, NucleiPatchGenerator
 from phenocoder.model import CVAE, CondCVAE
+
 
 def load_config(model_config):
     """
@@ -99,9 +100,7 @@ def encode_nuclei_patches(
     # load model
     cvae, oh_enc, config = load_phenocoder(dir_model)
     # set up patch generator
-    nuclei_patch_generator = NucleiPatchGenerator(
-        f"{dir_screen}/{plate}/{cycle}/{input_type}"
-    )
+    nuclei_patch_generator = NucleiPatchGenerator(f"{dir_screen}/{plate}/{cycle}/{input_type}")
     results = []
     for well in well_ids:
         if use_registered:
@@ -124,23 +123,16 @@ def encode_nuclei_patches(
                 # set label as index
                 df = df.set_index("label")
             else:
-                raise ValueError(
-                    "Label type must be provided when using registered data"
-                )
+                raise ValueError("Label type must be provided when using registered data")
         else:
-            df = load_features(
-                well, dir_plate=dir_plate, cycle=cycle, input_type=input_type
-            ).assign(well_id=well, plate_id=cycle)
+            df = load_features(well, dir_plate=dir_plate, cycle=cycle, input_type=input_type).assign(
+                well_id=well, plate_id=cycle
+            )
             channel_pattern = r"ch_(" + "|".join(channels) + r")_"
             general_pattern = r"ch_\d{2}_"
             # drop nuclei and neighbour columns of channels that are not used
             df = df[
-                [
-                    col
-                    for col in df.columns
-                    if not re.match(general_pattern, col)
-                    or re.search(channel_pattern, col)
-                ]
+                [col for col in df.columns if not re.match(general_pattern, col) or re.search(channel_pattern, col)]
             ]
             if df.empty:
                 continue
@@ -171,12 +163,9 @@ def encode_nuclei_patches(
                 if filter_encodable_conditions:
                     # filter out conditions which cannot be encoded
                     idx = df_cond.index[
-                        (df_cond["z"].isin(oh_enc.categories_[1]))
-                        & (df_cond["dataset"].isin(oh_enc.categories_[0]))
+                        (df_cond["z"].isin(oh_enc.categories_[1])) & (df_cond["dataset"].isin(oh_enc.categories_[0]))
                     ]
-                    conditions = oh_enc.transform(
-                        df_cond.iloc[idx][oh_enc.feature_names_in_]
-                    )
+                    conditions = oh_enc.transform(df_cond.iloc[idx][oh_enc.feature_names_in_])
                     patches = patches[idx]
                     df = df.iloc[idx]
                 else:
@@ -200,9 +189,7 @@ def encode_nuclei_patches(
 
             df = df.assign(well_id=well, plate_id=plate)
 
-            df.index = (
-                df["label"].astype(str) + "_" + df["well_id"] + "_" + df["plate_id"]
-            )
+            df.index = df["label"].astype(str) + "_" + df["well_id"] + "_" + df["plate_id"]
 
             adata = ad.AnnData(
                 X=df_z.values,
@@ -213,17 +200,15 @@ def encode_nuclei_patches(
             if message_passing:
                 # calculate knn graph in physical space
                 adata.obsm["spatial"] = adata.obs[["x", "y", "z"]].values.copy()
-                sq.gr.spatial_neighbors(
-                    adata, radius=radius, coord_type="generic", spatial_key="spatial"
-                )
+                sq.gr.spatial_neighbors(adata, radius=radius, coord_type="generic", spatial_key="spatial")
                 A = adata.obsp["spatial_connectivities"].copy()
                 A = A + csr_array(np.diag(np.ones(A.shape[0])))
                 # weight A with inverse degree matrix
                 D = np.array(A.sum(axis=1)).flatten()
-                D_inv = np.power(D, -1)
+                D_inv = np.power(D, -1.0)
                 D_inv[np.isinf(D_inv)] = 0
-                D_inv = np.diag(D_inv)
-                A = A.dot(D_inv)
+                # row-normalize: D_inv stays 1-D so SciPy handles the product
+                A = diags_array(D_inv) @ A
                 adata.layers["message_passing"] = np.dot(A, adata.X)
             results.append(adata)
     if return_only_patches:
@@ -243,12 +228,8 @@ def merge_adata(adata_source, adata_target, make_labels_unique=False):
     :return:
     """
     if make_labels_unique:
-        adata_source.obs["label"] = (
-            adata_source.obs["label"].astype(str) + "_" + adata_source.obs["well_id"]
-        )
-        adata_target.obs["label"] = (
-            adata_target.obs["label"].astype(str) + "_" + adata_target.obs["well_id"]
-        )
+        adata_source.obs["label"] = adata_source.obs["label"].astype(str) + "_" + adata_source.obs["well_id"]
+        adata_target.obs["label"] = adata_target.obs["label"].astype(str) + "_" + adata_target.obs["well_id"]
     labels_target = adata_target.obs["label"].values
     labels_source = adata_source.obs["label"].values
     labels = list(set(labels_target).intersection(set(labels_source)))
@@ -309,9 +290,7 @@ def encode_grid_patches(
         f"{dir_screen}/{plate}/{cycle}/{input_type}",
         stride=int(tuple(config["input_shape"])[0] / grid_resolution),
     )
-    patches, df = grid_patch_generator.get_patches(
-        well, quantiles=config["quantiles_high"]
-    )
+    patches, df = grid_patch_generator.get_patches(well, quantiles=config["quantiles_high"])
     df = df.assign(plate_id=cycle)
     df["z"] = df["z_stack_id"].astype(int)
     # get z, x, y idx coordinates
@@ -323,19 +302,14 @@ def encode_grid_patches(
         if filter_encodable_conditions:
             # filter out conditions which cannot be encoded
             idx = df_cond.index[
-                (df_cond["z"].isin(oh_enc.categories_[1]))
-                & (df_cond["dataset"].isin(oh_enc.categories_[0]))
+                (df_cond["z"].isin(oh_enc.categories_[1])) & (df_cond["dataset"].isin(oh_enc.categories_[0]))
             ]
-            conditions = oh_enc.transform(
-                df_cond.iloc[idx][oh_enc.feature_names_in_]
-            ).toarray()
+            conditions = oh_enc.transform(df_cond.iloc[idx][oh_enc.feature_names_in_]).toarray()
             patches = patches[idx]
             df = df.iloc[idx]
         else:
             conditions = oh_enc.transform(df_cond[oh_enc.feature_names_in_]).toarray()
-        z_mean, z_log_var, z = cvae.encoder.predict(
-            [patches, conditions], batch_size=64
-        )
+        z_mean, z_log_var, z = cvae.encoder.predict([patches, conditions], batch_size=64)
     else:
         z_mean, z_log_var, z = cvae.encoder.predict(patches, batch_size=64)
     if concatenate_latent_variables:
@@ -345,7 +319,7 @@ def encode_grid_patches(
     adata = ad.AnnData(X=df[[f"z_{i}" for i in range(z.shape[-1])]].values)
     adata.obs = df[["x", "y", "z"]].assign(well_id=well, plate_id=plate)
     df = pd.concat([df.reset_index(), df_z.reset_index()], axis=1)
-    adata = ad.AnnData(X=df[[f'z_{i}' for i in range(z.shape[-1])]].values)
-    adata.obs = df[['x', 'y', 'z']].assign(well_id=well, plate_id=plate)
+    adata = ad.AnnData(X=df[[f"z_{i}" for i in range(z.shape[-1])]].values)
+    adata.obs = df[["x", "y", "z"]].assign(well_id=well, plate_id=plate)
 
     return adata

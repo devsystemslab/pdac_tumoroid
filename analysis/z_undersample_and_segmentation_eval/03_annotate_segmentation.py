@@ -58,6 +58,7 @@ def load_images(
     dropout=None,
     restitch_labels=False,
     filter_labels=False,
+    editable=True,
 ):
     """
     Load images for a given well and channel
@@ -73,9 +74,7 @@ def load_images(
         print("No well selected.")
         return None
     # filter images and sort by z_stack_id
-    df_images = df_images[
-        (df_images["well_id"] == well) & (df_images["channel_id"] == channel)
-    ]
+    df_images = df_images[(df_images["well_id"] == well) & (df_images["channel_id"] == channel)]
     df_images["z_stack_id"] = df_images["z_stack_id"].astype(int)
     df_images = df_images.sort_values(by=["z_stack_id"], ascending=True)
     if dropout is not None:
@@ -99,12 +98,13 @@ def load_images(
             labels_to_remove = [
                 region.label
                 for region in tqdm(label_regions)
-                if region.bbox[3] - region.bbox[0] == 1  # z-extent of 1 slice
+                if region.bbox[3] - region.bbox[0] < 2  # z-extent of 1 slice
             ]
             imgs = remove_labels(imgs, labels_to_remove)
+        if editable:
+            imgs = imgs.compute()
         if restitch_labels:
             # convert to numpy array
-            imgs = imgs.compute()
             imgs = stitch3D(imgs)
     else:
         imgs = [
@@ -127,19 +127,13 @@ def load_images(
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Load images for a given well and channel"
-    )
+    parser = argparse.ArgumentParser(description="Load images for a given well and channel")
     parser.add_argument("--dir_images", type=str, help="Directory containing images")
-    parser.add_argument(
-        "--dir_labels", type=str, help="Directory containing annotations"
-    )
+    parser.add_argument("--dir_labels", type=str, help="Directory containing annotations")
     parser.add_argument("--well", type=str, help="Well ID")
     parser.add_argument("--channel", type=str, default="01", help="Channel ID")
     parser.add_argument("--sampling", type=int, default=1, help="Sampling factor")
-    parser.add_argument(
-        "--z_step_um", type=float, default=10.0, help="Z-step size in micrometers"
-    )
+    parser.add_argument("--z_step_um", type=float, default=10.0, help="Z-step size in micrometers")
     parser.add_argument(
         "--xy_pixel_size_um",
         type=float,
@@ -147,12 +141,11 @@ if __name__ == "__main__":
         help="XY pixel size in micrometers",
     )
     parser.add_argument("--dropout", type=int, default=None, help="Dropout factor")
-    parser.add_argument(
-        "--restitch_labels", action="store_true", help="Restitch labels"
-    )
-    parser.add_argument(
-        "--filter_labels", action="store_true", help="Filter labels on 1-slice extent"
-    )
+    parser.add_argument("--restitch_labels", action="store_true", help="Restitch labels")
+    parser.add_argument("--filter_labels", action="store_true", help="Filter labels on 1-slice extent")
+    parser.add_argument("--dir_save_segmentation", type=str, help="Directory to save segmentation")
+    parser.add_argument("--dir_save_img", type=str, help="Directory to save images")
+    parser.add_argument("--viewer", action="store_true", help="Start viewer")
     args = parser.parse_args()
     if args.well is None:
         raise ValueError("Well ID is required")
@@ -167,6 +160,14 @@ if __name__ == "__main__":
         xy_pixel_size_um=args.xy_pixel_size_um,
         dropout=args.dropout,
     )
+    if args.dir_save_img is not None:
+        io.imsave(
+            os.path.join(
+                args.dir_save_img,
+                f"{args.well}.tif",
+            ),
+            imgs,
+        )
     df_labels = get_metadata(args.dir_labels)
     labels, label_scales = load_images(
         df_labels,
@@ -179,7 +180,14 @@ if __name__ == "__main__":
         restitch_labels=args.restitch_labels,
         filter_labels=args.filter_labels,
     )
-    viewer = napari.Viewer()
-    viewer.add_image(imgs, scale=scale, name="image")
-    viewer.add_image(labels, scale=label_scales, name="label_image")
-    napari.run()
+    if args.dir_save_segmentation is not None:
+        if args.restitch_labels:
+            io.imsave(
+                os.path.join(args.dir_save_segmentation, f"{args.well}.tif"),
+                labels,
+            )
+    if args.viewer:
+        viewer = napari.Viewer()
+        viewer.add_image(imgs, scale=scale, name="image")
+        viewer.add_image(labels, scale=label_scales, name="label_image")
+        napari.run()
