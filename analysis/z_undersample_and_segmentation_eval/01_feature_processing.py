@@ -128,7 +128,7 @@ def process_features_restitch(well, dir_images, dir_segmented):
 
 
 if __name__ == "__main__":
-    dir_data = "data/segmentation_validation_inhibitors/segmentation_validation_inhibitors/004/004-01"
+    dir_data = "data/segmentation_validation_inhibitors/004/004-01"
     dir_images = Path(dir_data, "TIF_OVR_BG")
     dir_segmented = Path(dir_data, "SEG_TIF_OVR_BG")
     df_samples = get_metadata(dir_segmented)
