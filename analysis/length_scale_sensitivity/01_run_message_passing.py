@@ -3,7 +3,7 @@ from pathlib import Path
 import muon as mu
 import numpy as np
 import squidpy as sq
-from scipy.sparse import csr_array
+from scipy.sparse import csr_array, diags_array, issparse
 from tqdm import tqdm
 
 
@@ -16,11 +16,14 @@ def message_passing(adata, radii):
         A = A + csr_array(np.diag(np.ones(A.shape[0])))
         # weight A with inverse degree matrix
         D = np.array(A.sum(axis=1)).flatten()
-        D_inv = np.power(D, -1)
+        D_inv = np.power(D, -1.0)
         D_inv[np.isinf(D_inv)] = 0
-        D_inv = np.diag(D_inv)
-        A = A.dot(D_inv)
-        adata.layers[f"message_passing_radius_{radius}"] = np.dot(A, adata.X)
+        # row-normalize: D_inv stays 1-D so SciPy handles the product
+        A = diags_array(D_inv) @ A
+        smoothed = A @ adata.X
+        adata.layers[f"message_passing_radius_{radius}"] = (
+            smoothed.toarray() if issparse(smoothed) else np.asarray(smoothed)
+        )
     return adata
 
 
