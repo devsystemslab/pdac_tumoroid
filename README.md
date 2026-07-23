@@ -59,7 +59,7 @@ Each subdirectory of `analysis/` is a self-contained, numerically ordered pipeli
 
 The processed images and `mdata` (`.h5mu`) files are deposited in the EMBL-EBI BioImage Archive:
 
-> **DOI:** _TBD — add accession/DOI on publication._
+[doi: 10.6019/S-BIAD3191](https://doi.org/10.6019/S-BIAD3191)
 
 Each screen is organized as `<screen>/images/` and `<screen>/mdata/`. The analysis scripts read these `.h5mu` files (see `analysis/`).
 
